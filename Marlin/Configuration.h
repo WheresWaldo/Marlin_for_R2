@@ -74,7 +74,7 @@
 // User-specified version info of this build to display in [Pronterface, etc] terminal window during
 // startup. Implementation of an idea by Prof Braino to inform user that any changes made to this
 // build by the user have been successfully uploaded into firmware.
-#define STRING_CONFIG_H_AUTHOR "(BH, R2 config)" // Who made the changes.  BH
+#define STRING_CONFIG_H_AUTHOR "([[BH]], R2 config)" // Who made the changes.  [[BH]]
 //#define SHOW_BOOTSCREEN  //[robo]
 #define STRING_SPLASH_LINE1 SHORT_BUILD_VERSION // will be shown during bootup in line 1
 #define STRING_SPLASH_LINE2 WEBSITE_URL         // will be shown during bootup in line 2
@@ -110,7 +110,7 @@
  *
  * :[2400, 9600, 19200, 38400, 57600, 115200, 250000]
  */
-#define BAUDRATE 115200
+#define BAUDRATE 250000  //[BH]
 
 // Enable the Bluetooth serial interface on AT90USB devices
 //#define BLUETOOTH
@@ -321,7 +321,7 @@
 // When temperature exceeds max temp, your heater will be switched off.
 // This feature exists to protect your hotend from overheating accidentally, but *NOT* from thermistor short/failure!
 // You should use MINTEMP for thermistor short/failure protection.
-#define HEATER_0_MAXTEMP 300  //BH
+#define HEATER_0_MAXTEMP 300  //[[BH]]
 #define HEATER_1_MAXTEMP 275
 #define HEATER_2_MAXTEMP 275
 #define HEATER_3_MAXTEMP 275
@@ -351,9 +351,9 @@
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
   // Robo R2 24V  [robo]
-  #define  DEFAULT_Kp 23.56	//BH
-  #define  DEFAULT_Ki 1.86	//BH
-  #define  DEFAULT_Kd 74.68	//BH
+  #define  DEFAULT_Kp 23.56	//[BH]
+  #define  DEFAULT_Ki 1.86	//[BH]
+  #define  DEFAULT_Kd 74.68	//[BH]
 
   // Robo C2 19V  [robo]
   //#define  DEFAULT_Kp 23.75  //[robo]
@@ -399,15 +399,15 @@
   //#define PID_BED_DEBUG // Sends debug data to the serial port.
 
   //R2 24V Heater PCBA with 3mm Aluminum plate	[robo]
-  #define  DEFAULT_bedKp 429.89  //BH
-  #define  DEFAULT_bedKi 72.89	 //BH
-  #define  DEFAULT_bedKd 633.87	 //BH
+  #define  DEFAULT_bedKp 429.89  //[BH]
+  #define  DEFAULT_bedKi 72.89	 //[BH]
+  #define  DEFAULT_bedKd 633.87	 //[BH]
   
   //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   //from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
-  //#define  DEFAULT_bedKp 10.00  //BH
-  //#define  DEFAULT_bedKi .023   //BH
-  //#define  DEFAULT_bedKd 305.4  //BH
+  //#define  DEFAULT_bedKp 10.00  //[BH]
+  //#define  DEFAULT_bedKi .023   //[BH]
+  //#define  DEFAULT_bedKd 305.4  //[BH]
 
   //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   //from pidautotune
@@ -430,7 +430,7 @@
 // This option prevents a single extrusion longer than EXTRUDE_MAXLENGTH.
 // Note that for Bowden Extruders a too-small value here may prevent loading.
 #define PREVENT_LENGTHY_EXTRUDE
-#define EXTRUDE_MAXLENGTH 300  //BH
+#define EXTRUDE_MAXLENGTH 300  //[BH]
 
 //===========================================================================
 //======================== Thermal Runaway Protection =======================
@@ -534,7 +534,7 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80.0395, 80.0395, 800.24, 145.5 }  //[robo]
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 800, 145.5 }  //[BH]
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -693,7 +693,7 @@
 #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
 
 // X and Y axis travel speed (mm/m) between probes
-#define XY_PROBE_SPEED 8000	 //BH
+#define XY_PROBE_SPEED 8000	 //[[BH]]
 
 // Speed for the first approach when double-probing (with PROBE_DOUBLE_TOUCH)
 #define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
@@ -769,8 +769,8 @@
 
 // @section homing
 
-#define Z_HOMING_HEIGHT 10  // (in mm) Minimal z height before homing (G28) for Z clearance above the bed, clamps, ...
-                            // Be sure you have this distance over your Z_MAX_POS in case.  [robo]
+#define Z_HOMING_HEIGHT 5  // (in mm) Minimal z height before homing (G28) for Z clearance above the bed, clamps, ...
+                            // Be sure you have this distance over your Z_MAX_POS in case.  [BH]
 
 // Direction of endstops when homing; 1=MAX, -1=MIN
 // :[-1,1]
@@ -858,7 +858,7 @@
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
 //#define AUTO_BED_LEVELING_BILINEAR
-#define AUTO_BED_LEVELING_UBL
+#define AUTO_BED_LEVELING_UBL  //[BH]
 //#define MESH_BED_LEVELING
 
 /**
@@ -929,15 +929,15 @@
   //===========================================================================
 
   #define UBL_MESH_INSET 1      // Mesh inset margin on print area
-  #define GRID_MAX_POINTS_X 5   // Don't use more than 15 points per axis, implementation limited.	BH
+  #define GRID_MAX_POINTS_X 5   // Don't use more than 15 points per axis, implementation limited.	[BH]
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
-  #define UBL_PROBE_PT_1_X 10   // Probing points for 3-Point leveling of the mesh  BH
-  #define UBL_PROBE_PT_1_Y 186	//BH
-  #define UBL_PROBE_PT_2_X 10	//BH
-  #define UBL_PROBE_PT_2_Y 30	//BH
-  #define UBL_PROBE_PT_3_X 186	//BH
-  #define UBL_PROBE_PT_3_Y 30	//BH
+  #define UBL_PROBE_PT_1_X 10   // Probing points for 3-Point leveling of the mesh  [BH]
+  #define UBL_PROBE_PT_1_Y 186	//[BH]
+  #define UBL_PROBE_PT_2_X 10	//[BH]
+  #define UBL_PROBE_PT_2_Y 30	//[BH]
+  #define UBL_PROBE_PT_3_X 186	//[BH]
+  #define UBL_PROBE_PT_3_Y 30	//[BH]
 
   #define UBL_G26_MESH_VALIDATION // Enable G26 mesh validation
   #define UBL_MESH_EDIT_MOVES_Z     // Sophisticated users prefer no movement of nozzle
@@ -949,7 +949,7 @@
   //===========================================================================
 
   #define MESH_INSET 10          // Mesh inset margin on print area
-  #define GRID_MAX_POINTS_X 4    // Don't use more than 7 points per axis, implementation limited.  BH
+  #define GRID_MAX_POINTS_X 4    // Don't use more than 7 points per axis, implementation limited.  [BH]
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   //#define MESH_G28_REST_ORIGIN // After homing all axes ('G28' or 'G28 XYZ') rest Z at Z_MIN_POS
@@ -963,7 +963,7 @@
 //#define LCD_BED_LEVELING
 
 #if ENABLED(LCD_BED_LEVELING)
-  #define MBL_Z_STEP 0.02    // Step size while manually probing Z axis.  BH
+  #define MBL_Z_STEP 0.02    // Step size while manually probing Z axis.  [BH]
   #define LCD_PROBE_Z_RANGE 4 // Z Range centered on Z_MIN_POS for LCD Z adjustment
   #define LEVEL_BED_CORNERS   // Add an option to move between corners
 #endif
