@@ -74,7 +74,7 @@
 // User-specified version info of this build to display in [Pronterface, etc] terminal window during
 // startup. Implementation of an idea by Prof Braino to inform user that any changes made to this
 // build by the user have been successfully uploaded into firmware.
-#define STRING_CONFIG_H_AUTHOR "([[BH]], R2 config)" // Who made the changes.  [[BH]]
+#define STRING_CONFIG_H_AUTHOR "([BH], R2 config)" // Who made the changes.  [BH]
 //#define SHOW_BOOTSCREEN  //[robo]
 #define STRING_SPLASH_LINE1 SHORT_BUILD_VERSION // will be shown during bootup in line 1
 #define STRING_SPLASH_LINE2 WEBSITE_URL         // will be shown during bootup in line 2
@@ -549,7 +549,7 @@
  * Override with M201
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 500 }	//[robo]
+#define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 100, 1000 }	//[robo]
 
 /**
  * Default Acceleration (change/s) change = mm/s
@@ -559,7 +559,7 @@
  *   M204 R    Retract Acceleration
  *   M204 T    Travel Acceleration
  */
-#define DEFAULT_ACCELERATION          1000    // X, Y, Z and E acceleration for printing moves	[robo]
+#define DEFAULT_ACCELERATION           500    // X, Y, Z and E acceleration for printing moves	[BH]
 #define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts  [robo]
 #define DEFAULT_TRAVEL_ACCELERATION   1000    // X, Y, Z acceleration for travel (non printing) moves  [robo]
 
@@ -571,10 +571,10 @@
  * When changing speed and direction, if the difference is less than the
  * value set here, it may happen instantaneously.
  */
-#define DEFAULT_XJERK                 10.0	 //[robo]
-#define DEFAULT_YJERK                 10.0	 //[robo]
-#define DEFAULT_ZJERK                  0.4	 
-#define DEFAULT_EJERK                  1.0	 //[robo]
+#define DEFAULT_XJERK	8.0	 //[BH]
+#define DEFAULT_YJERK	8.0	 //[BH]
+#define DEFAULT_ZJERK	0.4	 
+#define DEFAULT_EJERK	1.0	 //[robo]
 
 //===========================================================================
 //============================= Z Probe Options =============================
@@ -693,7 +693,7 @@
 #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
 
 // X and Y axis travel speed (mm/m) between probes
-#define XY_PROBE_SPEED 8000	 //[[BH]]
+#define XY_PROBE_SPEED 10000	 //[[BH]]
 
 // Speed for the first approach when double-probing (with PROBE_DOUBLE_TOUCH)
 #define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
@@ -718,12 +718,12 @@
  * Example: `M851 Z-5` with a CLEARANCE of 4  =>  9mm from bed to nozzle.
  *     But: `M851 Z+1` with a CLEARANCE of 2  =>  2mm from bed to nozzle.
  */
-#define Z_CLEARANCE_DEPLOY_PROBE   15 // Z Clearance for Deploy/Stow  [robo]
+#define Z_CLEARANCE_DEPLOY_PROBE    15 // Z Clearance for Deploy/Stow  [robo]
 #define Z_CLEARANCE_BETWEEN_PROBES  25 // Z Clearance between probe points	[robo]
 
 // For M851 give a range for adjusting the Z probe offset
 #define Z_PROBE_OFFSET_RANGE_MIN -20
-#define Z_PROBE_OFFSET_RANGE_MAX 20
+#define Z_PROBE_OFFSET_RANGE_MAX  20
 
 // Enable the M48 repeatability test to test probe accuracy
 //#define Z_MIN_PROBE_REPEATABILITY_TEST
@@ -775,8 +775,8 @@
 // Direction of endstops when homing; 1=MAX, -1=MIN
 // :[-1,1]
 #define X_HOME_DIR -1
-#define Y_HOME_DIR 1  //[robo]
-#define Z_HOME_DIR 1  //[robo]
+#define Y_HOME_DIR  1  //[robo]
+#define Z_HOME_DIR  1  //[robo]
 
 // @section machine
 
@@ -858,8 +858,8 @@
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
 //#define AUTO_BED_LEVELING_BILINEAR
-#define AUTO_BED_LEVELING_UBL  //[BH]
-//#define MESH_BED_LEVELING  //[BH]
+//#define AUTO_BED_LEVELING_UBL  //[BH]
+#define MESH_BED_LEVELING  //[BH]
 
 /**
  * Enable detailed logging of G28, G29, M48, etc.
@@ -882,10 +882,10 @@
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   // Set the boundaries for probing (where the probe can reach).
-  #define LEFT_PROBE_BED_POSITION 10  //[robo]
-  #define RIGHT_PROBE_BED_POSITION 186  //[robo]
-  #define FRONT_PROBE_BED_POSITION 30  //[robo]
-  #define BACK_PROBE_BED_POSITION 186  //[robo]
+  #define LEFT_PROBE_BED_POSITION	10	//[robo]
+  #define RIGHT_PROBE_BED_POSITION	186	//[robo]
+  #define FRONT_PROBE_BED_POSITION	30	//[robo]
+  #define BACK_PROBE_BED_POSITION	186	//[robo]
 
   // The Z probe minimum outer margin (to validate G29 parameters).
   #define MIN_PROBE_EDGE 10
@@ -915,7 +915,7 @@
 
   // 3 arbitrary points to probe.
   // A simple cross-product is used to estimate the plane of the bed.
-  #define ABL_PROBE_PT_1_X 10  //[robo]
+  #define ABL_PROBE_PT_1_X 10	//[robo]
   #define ABL_PROBE_PT_1_Y 100	//[robo]
   #define ABL_PROBE_PT_2_X 15
   #define ABL_PROBE_PT_2_Y 20
@@ -928,8 +928,8 @@
   //========================= Unified Bed Leveling ============================
   //===========================================================================
 
-  #define UBL_MESH_INSET 1      // Mesh inset margin on print area
-  #define GRID_MAX_POINTS_X 5   // Don't use more than 15 points per axis, implementation limited.	[BH]
+  #define UBL_MESH_INSET	1	// Mesh inset margin on print area
+  #define GRID_MAX_POINTS_X	5   // Don't use more than 15 points per axis, implementation limited.	[BH]
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   #define UBL_PROBE_PT_1_X 10   // Probing points for 3-Point leveling of the mesh  [BH]
@@ -948,8 +948,8 @@
   //=================================== Mesh ==================================
   //===========================================================================
 
-  #define MESH_INSET 10          // Mesh inset margin on print area
-  #define GRID_MAX_POINTS_X 5    // Don't use more than 7 points per axis, implementation limited.  [BH]
+  #define MESH_INSET		5	// Mesh inset margin on print area  [BH]
+  #define GRID_MAX_POINTS_X	5	// Don't use more than 7 points per axis, implementation limited.  [BH]
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   //#define MESH_G28_REST_ORIGIN // After homing all axes ('G28' or 'G28 XYZ') rest Z at Z_MIN_POS
@@ -963,9 +963,9 @@
 //#define LCD_BED_LEVELING
 
 #if ENABLED(LCD_BED_LEVELING)
-  #define MBL_Z_STEP 0.02    // Step size while manually probing Z axis.  [BH]
-  #define LCD_PROBE_Z_RANGE 4 // Z Range centered on Z_MIN_POS for LCD Z adjustment
-  #define LEVEL_BED_CORNERS   // Add an option to move between corners
+  #define MBL_Z_STEP		0.02    // Step size while manually probing Z axis.  [BH]
+  #define LCD_PROBE_Z_RANGE 4		// Z Range centered on Z_MIN_POS for LCD Z adjustment
+  #define LEVEL_BED_CORNERS			// Add an option to move between corners
 #endif
 
 /**
@@ -1003,8 +1003,8 @@
 #endif
 
 // Homing speeds (mm/m)
-#define HOMING_FEEDRATE_XY (50*60)
-#define HOMING_FEEDRATE_Z  (6*60)  //[robo]
+#define HOMING_FEEDRATE_XY (5000)	//[BH]
+#define HOMING_FEEDRATE_Z  (500)	//[BH]
 
 //=============================================================================
 //============================= Additional Features ===========================
@@ -1020,9 +1020,9 @@
 // M501 - reads parameters from EEPROM (if you need reset them after you changed them temporarily).
 // M502 - reverts to the default "factory settings".  You still need to store them in EEPROM afterwards if you want to.
 //
-#define EEPROM_SETTINGS // Enable for M500 and M501 commands  [robo]
-//#define DISABLE_M503    // Saves ~2700 bytes of PROGMEM. Disable for release!
-#define EEPROM_CHITCHAT   // Give feedback on EEPROM commands. Disable to save PROGMEM.
+#define EEPROM_SETTINGS		// Enable for M500 and M501 commands  [robo]
+//#define DISABLE_M503		// Saves ~2700 bytes of PROGMEM. Disable for release!
+#define EEPROM_CHITCHAT		// Give feedback on EEPROM commands. Disable to save PROGMEM.
 
 //
 // Host Keepalive
@@ -1052,13 +1052,13 @@
 // @section temperature
 
 // Preheat Constants
-#define PREHEAT_1_TEMP_HOTEND 200  //[robo]
-#define PREHEAT_1_TEMP_BED     60  //[robo]
-#define PREHEAT_1_FAN_SPEED     0  // Value from 0 to 255
+#define PREHEAT_1_TEMP_HOTEND	210	//[BH]
+#define PREHEAT_1_TEMP_BED		55	//[BH]
+#define PREHEAT_1_FAN_SPEED     128	// Value from 0 to 255
 
-#define PREHEAT_2_TEMP_HOTEND 230  //[robo]
-#define PREHEAT_2_TEMP_BED     80  //[robo]
-#define PREHEAT_2_FAN_SPEED     0  // Value from 0 to 255
+#define PREHEAT_2_TEMP_HOTEND	235	//[BH]
+#define PREHEAT_2_TEMP_BED		80	//[robo]
+#define PREHEAT_2_FAN_SPEED		0	// Value from 0 to 255
 
 /**
  * Nozzle Park -- EXPERIMENTAL
@@ -1169,7 +1169,7 @@
  *
  * View the current statistics with M78.
  */
-#define PRINTCOUNTER  //[robo]
+#define PRINTCOUNTER	//[robo]
 
 //=============================================================================
 //============================= LCD and SD support ============================
@@ -1188,7 +1188,7 @@
  *
  * :{ 'en':'English', 'an':'Aragonese', 'bg':'Bulgarian', 'ca':'Catalan', 'cn':'Chinese', 'cz':'Czech', 'cz_utf8':'Czech (UTF8)', 'de':'German', 'el':'Greek', 'el-gr':'Greek (Greece)', 'es':'Spanish', 'eu':'Basque-Euskera', 'fi':'Finnish', 'fr':'French', 'gl':'Galician', 'hr':'Croatian', 'it':'Italian', 'kana':'Japanese', 'kana_utf8':'Japanese (UTF8)', 'nl':'Dutch', 'pl':'Polish', 'pt':'Portuguese', 'pt-br':'Portuguese (Brazilian)', 'pt-br_utf8':'Portuguese (Brazilian UTF8)', 'pt_utf8':'Portuguese (UTF8)', 'ru':'Russian', 'sk_utf8':'Slovak (UTF8)', 'tr':'Turkish', 'uk':'Ukrainian', 'zh_CN':'Chinese (Simplified)', 'zh_TW':'Chinese (Taiwan)', test':'TEST' }
  */
-#define LCD_LANGUAGE en
+#define LCD_LANGUAGE	en
 
 /**
  * LCD Character Set
@@ -1212,7 +1212,7 @@
  *
  * :['JAPANESE', 'WESTERN', 'CYRILLIC']
  */
-#define DISPLAY_CHARSET_HD44780 JAPANESE
+#define DISPLAY_CHARSET_HD44780	JAPANESE
 
 /**
  * LCD TYPE
@@ -1520,13 +1520,13 @@
 // Use software PWM to drive the fan, as for the heaters. This uses a very low frequency
 // which is not as annoying as with the hardware PWM. On the other hand, if this frequency
 // is too low, you should also increment SOFT_PWM_SCALE.
-#define FAN_SOFT_PWM  //[robo]
+#define FAN_SOFT_PWM	//[robo]
 
 // Incrementing this by 1 will double the software PWM frequency,
 // affecting heaters, and the fan if FAN_SOFT_PWM is enabled.
 // However, control resolution will be halved for each increment;
 // at zero value, there are 128 effective control positions.
-#define SOFT_PWM_SCALE 0
+#define SOFT_PWM_SCALE	0
 
 // If SOFT_PWM_SCALE is set to a value higher than 0, dithering can
 // be used to mitigate the associated resolution loss. If enabled,
@@ -1584,8 +1584,8 @@
 // Support for Adafruit Neopixel LED driver
 //#define NEOPIXEL_RGBW_LED
 #if ENABLED(NEOPIXEL_RGBW_LED)
-  #define NEOPIXEL_PIN    4       // D4 (EXP2-5 on Printrboard)
-  #define NEOPIXEL_PIXELS 3
+  #define NEOPIXEL_PIN		4	// D4 (EXP2-5 on Printrboard)
+  #define NEOPIXEL_PIXELS	3
   //#define NEOPIXEL_STARTUP_TEST // Cycle through colors at startup
 #endif
 
@@ -1648,15 +1648,15 @@
  */
 //#define FILAMENT_WIDTH_SENSOR
 
-#define DEFAULT_NOMINAL_FILAMENT_DIA 1.75   // (mm) Diameter of the filament generally used (3.0 or 1.75mm), also used in the slicer. Used to validate sensor reading.
+#define DEFAULT_NOMINAL_FILAMENT_DIA	1.75	// (mm) Diameter of the filament generally used (3.0 or 1.75mm), also used in the slicer. Used to validate sensor reading.
 
 #if ENABLED(FILAMENT_WIDTH_SENSOR)
-  #define FILAMENT_SENSOR_EXTRUDER_NUM 0    // Index of the extruder that has the filament sensor (0,1,2,3)
-  #define MEASUREMENT_DELAY_CM        14    // (cm) The distance from the filament sensor to the melting chamber
+  #define FILAMENT_SENSOR_EXTRUDER_NUM	0		// Index of the extruder that has the filament sensor (0,1,2,3)
+  #define MEASUREMENT_DELAY_CM			14		// (cm) The distance from the filament sensor to the melting chamber
 
-  #define MEASURED_UPPER_LIMIT         2    // (mm) Upper limit used to validate sensor reading
-  #define MEASURED_LOWER_LIMIT         1.50 // (mm) Lower limit used to validate sensor reading
-  #define MAX_MEASUREMENT_DELAY       20    // (bytes) Buffer size for stored measurements (1 byte per cm). Must be larger than MEASUREMENT_DELAY_CM.
+  #define MEASURED_UPPER_LIMIT			2		// (mm) Upper limit used to validate sensor reading
+  #define MEASURED_LOWER_LIMIT			1.50	// (mm) Lower limit used to validate sensor reading
+  #define MAX_MEASUREMENT_DELAY			20		// (bytes) Buffer size for stored measurements (1 byte per cm). Must be larger than MEASUREMENT_DELAY_CM.
 
   #define DEFAULT_MEASURED_FILAMENT_DIA DEFAULT_NOMINAL_FILAMENT_DIA // Set measured to nominal initially
 
