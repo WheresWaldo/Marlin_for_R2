@@ -1,5 +1,5 @@
-# Marlin-1.1.5-R2
-Current release Marlin modified for Robo R2
+# Marlin for the Robo R2 printer
+Current release Marlin modified for the Robo R2
 
 In an effort to make the R2 an even better printer than it is, this is a newer version of Marlin than supplied by Robo3D. This version follows the version numbering scheme of the original Marlin source. The result is that this will always appear to be behind the "Official" firmware release as they are currently on version 1.1.8 (Marlin 1.1.0 RC6/RC8)
 
