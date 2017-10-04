@@ -33,7 +33,7 @@
 #endif
 
 #ifndef DEFAULT_SOURCE_CODE_URL
-  #define DEFAULT_SOURCE_CODE_URL "https://github.com/Robo3D/Marlin-C2"
+  #define DEFAULT_SOURCE_CODE_URL "https://github.com/WheresWaldo/Marlin_for_R2 (dev)"
 #endif
 
 #define IS_ROBOC2
