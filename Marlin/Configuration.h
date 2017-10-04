@@ -718,12 +718,12 @@
  * Example: `M851 Z-5` with a CLEARANCE of 4  =>  9mm from bed to nozzle.
  *     But: `M851 Z+1` with a CLEARANCE of 2  =>  2mm from bed to nozzle.
  */
-#define Z_CLEARANCE_DEPLOY_PROBE    15 // Z Clearance for Deploy/Stow  [robo]
-#define Z_CLEARANCE_BETWEEN_PROBES  25 // Z Clearance between probe points	[robo]
+#define Z_CLEARANCE_DEPLOY_PROBE    0 // Z Clearance for Deploy/Stow  [BH]
+#define Z_CLEARANCE_BETWEEN_PROBES  5 // Z Clearance between probe points	[BH]
 
 // For M851 give a range for adjusting the Z probe offset
-#define Z_PROBE_OFFSET_RANGE_MIN -20
-#define Z_PROBE_OFFSET_RANGE_MAX  20
+#define Z_PROBE_OFFSET_RANGE_MIN -10	//[BH]
+#define Z_PROBE_OFFSET_RANGE_MAX  10	//[BH]
 
 // Enable the M48 repeatability test to test probe accuracy
 //#define Z_MIN_PROBE_REPEATABILITY_TEST
@@ -769,7 +769,7 @@
 
 // @section homing
 
-#define Z_HOMING_HEIGHT 5  // (in mm) Minimal z height before homing (G28) for Z clearance above the bed, clamps, ...
+#define Z_HOMING_HEIGHT 3	// (in mm) Minimal z height before homing (G28) for Z clearance above the bed, clamps, ...
                             // Be sure you have this distance over your Z_MAX_POS in case.  [BH]
 
 // Direction of endstops when homing; 1=MAX, -1=MIN
@@ -878,7 +878,7 @@
 #if ENABLED(AUTO_BED_LEVELING_LINEAR) || ENABLED(AUTO_BED_LEVELING_BILINEAR)
 
   // Set the number of grid points per dimension.
-  #define GRID_MAX_POINTS_X 4  [robo]
+  #define GRID_MAX_POINTS_X 5  [robo]
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   // Set the boundaries for probing (where the probe can reach).
@@ -928,7 +928,7 @@
   //========================= Unified Bed Leveling ============================
   //===========================================================================
 
-  #define UBL_MESH_INSET	1	// Mesh inset margin on print area
+  #define UBL_MESH_INSET	10	// Mesh inset margin on print area	[BH]
   #define GRID_MAX_POINTS_X	5   // Don't use more than 15 points per axis, implementation limited.	[BH]
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
@@ -939,7 +939,7 @@
   #define UBL_PROBE_PT_3_X 186	//[BH]
   #define UBL_PROBE_PT_3_Y 30	//[BH]
 
-  #define UBL_G26_MESH_VALIDATION // Enable G26 mesh validation
+  #define UBL_G26_MESH_VALIDATION	// Enable G26 mesh validation
   #define UBL_MESH_EDIT_MOVES_Z     // Sophisticated users prefer no movement of nozzle
 
 #elif ENABLED(MESH_BED_LEVELING)
@@ -948,7 +948,7 @@
   //=================================== Mesh ==================================
   //===========================================================================
 
-  #define MESH_INSET		5	// Mesh inset margin on print area  [BH]
+  #define MESH_INSET		10	// Mesh inset margin on print area  [BH]
   #define GRID_MAX_POINTS_X	5	// Don't use more than 7 points per axis, implementation limited.  [BH]
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
@@ -964,7 +964,7 @@
 
 #if ENABLED(LCD_BED_LEVELING)
   #define MBL_Z_STEP		0.02    // Step size while manually probing Z axis.  [BH]
-  #define LCD_PROBE_Z_RANGE 4		// Z Range centered on Z_MIN_POS for LCD Z adjustment
+  #define LCD_PROBE_Z_RANGE	4		// Z Range centered on Z_MIN_POS for LCD Z adjustment
   #define LEVEL_BED_CORNERS			// Add an option to move between corners
 #endif
 
@@ -1003,8 +1003,8 @@
 #endif
 
 // Homing speeds (mm/m)
-#define HOMING_FEEDRATE_XY (5000)	//[BH]
-#define HOMING_FEEDRATE_Z  (500)	//[BH]
+#define HOMING_FEEDRATE_XY (8000)	//[BH]
+#define HOMING_FEEDRATE_Z  (1000)	//[BH]
 
 //=============================================================================
 //============================= Additional Features ===========================
