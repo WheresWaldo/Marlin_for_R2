@@ -35,7 +35,7 @@
   /**
    * Marlin release version identifier
    */
-  #define SHORT_BUILD_VERSION "1.1.5"
+  #define SHORT_BUILD_VERSION "1.1.6"
 
   /**
    * Verbose version identifier which should contain a reference to the location
@@ -48,7 +48,7 @@
    * here we define this default string as the date where the latest release
    * version was tagged.
    */
-  #define STRING_DISTRIBUTION_DATE "2017-10-04 12:00"  //BH
+  #define STRING_DISTRIBUTION_DATE "2017-10-16 12:00"  //[BH]
 
   /**
    * Required minimum Configuration.h and Configuration_adv.h file versions.
@@ -70,7 +70,7 @@
   /**
    * Defines a generic printer name to be output to the LCD after booting Marlin.
    */
-  #define MACHINE_NAME "Robo R2"  //BH
+  #define MACHINE_NAME "Robo R2"  //[BH]
 
   /**
    * The SOURCE_CODE_URL is the location where users will find the Marlin Source
@@ -83,7 +83,7 @@
   /**
    * Default generic printer UUID.
    */
-  #define DEFAULT_MACHINE_UUID "154c9591-82f9-4f8f-8c3b-ae60bd55401c"  //BH
+  #define DEFAULT_MACHINE_UUID "154c9591-82f9-4f8f-8c3b-ae60bd55401c"  //[BH]
 
   /**
    * The WEBSITE_URL is the location where users can get more information such as
