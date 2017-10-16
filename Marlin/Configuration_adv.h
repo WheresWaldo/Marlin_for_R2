@@ -161,10 +161,10 @@
 // then extrude some filament every couple of SECONDS.
 //#define EXTRUDER_RUNOUT_PREVENT
 #if ENABLED(EXTRUDER_RUNOUT_PREVENT)
-  #define EXTRUDER_RUNOUT_MINTEMP	190
-  #define EXTRUDER_RUNOUT_SECONDS	30
-  #define EXTRUDER_RUNOUT_SPEED		1500	// mm/m
-  #define EXTRUDER_RUNOUT_EXTRUDE	5		// mm
+  #define EXTRUDER_RUNOUT_MINTEMP 190
+  #define EXTRUDER_RUNOUT_SECONDS 30
+  #define EXTRUDER_RUNOUT_SPEED 1500  // mm/m
+  #define EXTRUDER_RUNOUT_EXTRUDE 5   // mm
 #endif
 
 // @section temperature
@@ -184,8 +184,8 @@
 //#define USE_CONTROLLER_FAN
 #if ENABLED(USE_CONTROLLER_FAN)
   //#define CONTROLLER_FAN_PIN FAN1_PIN  // Set a custom pin for the controller fan
-  #define CONTROLLERFAN_SECS	60	// Duration in seconds for the fan to run after all motors are disabled
-  #define CONTROLLERFAN_SPEED	255	// 255 == full speed
+  #define CONTROLLERFAN_SECS 60          // Duration in seconds for the fan to run after all motors are disabled
+  #define CONTROLLERFAN_SPEED 255        // 255 == full speed
 #endif
 
 // When first starting the main fan, run it at full speed for the
@@ -222,7 +222,7 @@
 
 /**
  * Part-Cooling Fan Multiplexer
- * 
+ *
  * This feature allows you to digitally multiplex the fan output.
  * The multiplexer is automatically switched at tool-change.
  * Set FANMUX[012]_PINs below for up to 2, 4, or 8 multiplexed fans.
@@ -348,7 +348,7 @@
 //homing hits the endstop, then retracts by this distance, before it tries to slowly bump again:
 #define X_HOME_BUMP_MM	3	//[BH]
 #define Y_HOME_BUMP_MM	3	//[BH]
-#define Z_HOME_BUMP_MM	2
+#define Z_HOME_BUMP_MM 2
 #define HOMING_BUMP_DIVISOR {2, 2, 4}  // Re-Bump Speed Divisor (Divides the Homing Feedrate)
 #define QUICK_HOME  //if this is defined, if both x and y are to be homed, a diagonal move will be performed initially.  [robo]
 
@@ -363,10 +363,10 @@
 //#define DUAL_NOZZLE_DUPLICATION_MODE
 
 // By default pololu step drivers require an active high signal. However, some high power drivers require an active low signal as step.
-#define INVERT_X_STEP_PIN	false
-#define INVERT_Y_STEP_PIN	false
-#define INVERT_Z_STEP_PIN	false
-#define INVERT_E_STEP_PIN	false
+#define INVERT_X_STEP_PIN false
+#define INVERT_Y_STEP_PIN false
+#define INVERT_Z_STEP_PIN false
+#define INVERT_E_STEP_PIN false
 
 // Default stepper release if idle. Set to 0 to deactivate.
 // Steppers will shut down DEFAULT_STEPPER_DEACTIVE_TIME seconds after the last move when DISABLE_INACTIVE_? is true.
@@ -377,8 +377,8 @@
 #define DISABLE_INACTIVE_Z true  // set to false if the nozzle will fall down on your printed part when print has finished.
 #define DISABLE_INACTIVE_E true
 
-#define DEFAULT_MINIMUMFEEDRATE		0.0	// minimum feedrate
-#define DEFAULT_MINTRAVELFEEDRATE	0.0
+#define DEFAULT_MINIMUMFEEDRATE       0.0     // minimum feedrate
+#define DEFAULT_MINTRAVELFEEDRATE     0.0
 
 //#define HOME_AFTER_DEACTIVATE  // Require rehoming after steppers are deactivated
 
@@ -392,7 +392,7 @@
 // @section extras
 
 // minimum time in microseconds that a movement needs to take if the buffer is emptied.
-#define DEFAULT_MINSEGMENTTIME	20000
+#define DEFAULT_MINSEGMENTTIME        20000
 
 // If defined the movements slow down when the look ahead buffer is only half full
 #define SLOWDOWN
@@ -408,7 +408,7 @@
 #define MINIMUM_PLANNER_SPEED 0.05 // (mm/sec)
 
 // Microstep setting (Only functional when stepper driver microstep pins are connected to MCU.
-#define MICROSTEP_MODES	{16,16,16,16,16}	// [1,2,4,8,16]
+#define MICROSTEP_MODES {16,16,16,16,16} // [1,2,4,8,16]
 
 /**
  *  @section  stepper motor current
@@ -436,21 +436,21 @@
 
 // Uncomment to enable an I2C based DIGIPOT like on the Azteeg X3 Pro
 //#define DIGIPOT_I2C
-//#define DIGIPOT_MCP4018				// Requires library from https://github.com/stawel/SlowSoftI2CMaster
-#define DIGIPOT_I2C_NUM_CHANNELS	8	// 5DPRINT: 4     AZTEEG_X3_PRO: 8
+//#define DIGIPOT_MCP4018          // Requires library from https://github.com/stawel/SlowSoftI2CMaster
+#define DIGIPOT_I2C_NUM_CHANNELS 8 // 5DPRINT: 4     AZTEEG_X3_PRO: 8
 // Actual motor currents in Amps, need as many here as DIGIPOT_I2C_NUM_CHANNELS
-#define DIGIPOT_I2C_MOTOR_CURRENTS	{ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 }  //  AZTEEG_X3_PRO
+#define DIGIPOT_I2C_MOTOR_CURRENTS { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 }  //  AZTEEG_X3_PRO
 
 //===========================================================================
 //=============================Additional Features===========================
 //===========================================================================
 
 #define ENCODER_RATE_MULTIPLIER         // If defined, certain menu edit operations automatically multiply the steps when the encoder is moved quickly
-#define ENCODER_10X_STEPS_PER_SEC	75	// If the encoder steps per sec exceeds this value, multiply steps moved x10 to quickly advance the value
-#define ENCODER_100X_STEPS_PER_SEC	160	// If the encoder steps per sec exceeds this value, multiply steps moved x100 to really quickly advance the value
+#define ENCODER_10X_STEPS_PER_SEC 75    // If the encoder steps per sec exceeds this value, multiply steps moved x10 to quickly advance the value
+#define ENCODER_100X_STEPS_PER_SEC 160  // If the encoder steps per sec exceeds this value, multiply steps moved x100 to really quickly advance the value
 
-//#define CHDK 4		//Pin for triggering CHDK to take a picture see how to use it here http://captain-slow.dk/2014/03/09/3d-printing-timelapses/
-#define CHDK_DELAY	50	//How long in ms the pin should stay HIGH before going LOW again
+//#define CHDK 4        //Pin for triggering CHDK to take a picture see how to use it here http://captain-slow.dk/2014/03/09/3d-printing-timelapses/
+#define CHDK_DELAY 50 //How long in ms the pin should stay HIGH before going LOW again
 
 // @section lcd
 
@@ -475,8 +475,8 @@
   // Note: This is always disabled for ULTIPANEL (except ELB_FULL_GRAPHIC_CONTROLLER).
   #define SD_DETECT_INVERTED
 
-  #define SD_FINISHED_STEPPERRELEASE	true  //if sd support and the file is finished: disable steppers?
-  #define SD_FINISHED_RELEASECOMMAND	"M84 X Y Z E" // You might want to keep the z enabled so your bed stays in place.
+  #define SD_FINISHED_STEPPERRELEASE true  //if sd support and the file is finished: disable steppers?
+  #define SD_FINISHED_RELEASECOMMAND "M84 X Y Z E" // You might want to keep the z enabled so your bed stays in place.
 
   #define SDCARD_RATHERRECENTFIRST  //reverse file order of sd card menu display. Its sorted practically after the file system block order.
   // if a file is deleted, it frees a block. hence, the order is not purely chronological. To still have auto0.g accessible, there is again the option to do that.
@@ -510,7 +510,7 @@
 
   // SD Card Sorting options
   #if ENABLED(SDCARD_SORT_ALPHA)
-    #define SDSORT_LIMIT       40     // Maximum number of sorted items (10-256).
+    #define SDSORT_LIMIT       40     // Maximum number of sorted items (10-256). Costs 27 bytes each.
     #define FOLDER_SORTING     -1     // -1=above  0=none  1=below
     #define SDSORT_GCODE       false  // Allow turning sorting on/off with LCD and M34 g-code.
     #define SDSORT_USES_RAM    false  // Pre-allocate a static array for faster pre-sorting.
@@ -601,30 +601,18 @@
  */
 //#define BABYSTEPPING
 #if ENABLED(BABYSTEPPING)
-  #define BABYSTEP_XY              // Also enable X/Y Babystepping. Not supported on DELTA!
-  #define BABYSTEP_INVERT_Z false  // Change if Z babysteps should go the other way
-  #define BABYSTEP_MULTIPLICATOR 1 // Babysteps are very small. Increase for faster motion.
-  //#define BABYSTEP_ZPROBE_OFFSET // Enable to combine M851 and Babystepping
+  //#define BABYSTEP_XY              // Also enable X/Y Babystepping. Not supported on DELTA!
+  #define BABYSTEP_INVERT_Z false    // Change if Z babysteps should go the other way
+  #define BABYSTEP_MULTIPLICATOR 100 // Babysteps are very small. Increase for faster motion.
+  //#define BABYSTEP_ZPROBE_OFFSET   // Enable to combine M851 and Babystepping
   //#define DOUBLECLICK_FOR_Z_BABYSTEPPING // Double-click on the Status Screen for Z Babystepping.
   #define DOUBLECLICK_MAX_INTERVAL 1250 // Maximum interval between clicks, in milliseconds.
                                         // Note: Extra time may be added to mitigate controller latency.
+  //#define BABYSTEP_ZPROBE_GFX_OVERLAY // Enable graphical overlay on Z-offset editor
+  //#define BABYSTEP_ZPROBE_GFX_REVERSE // Reverses the direction of the CW/CCW indicators
 #endif
 
 // @section extruder
-
-// extruder advance constant (s2/mm3)
-//
-// advance (steps) = STEPS_PER_CUBIC_MM_E * EXTRUDER_ADVANCE_K * cubic mm per second ^ 2
-//
-// Hooke's law says:    force = k * distance
-// Bernoulli's principle says:  v ^ 2 / 2 + g . h + pressure / density = constant
-// so: v ^ 2 is proportional to number of steps we advance the extruder
-//#define ADVANCE
-
-#if ENABLED(ADVANCE)
-  #define EXTRUDER_ADVANCE_K .0
-  #define D_FILAMENT 1.75  //[robo]
-#endif
 
 /**
  * Implementation of linear pressure control
@@ -672,15 +660,15 @@
 // Below are the macros that are used to define the borders for the mesh area,
 // made available here for specialized needs, ie dual extruder setup.
 #if ENABLED(MESH_BED_LEVELING)
-  #define MESH_MIN_X	MESH_INSET
-  #define MESH_MAX_X	(X_BED_SIZE - (MESH_INSET))
-  #define MESH_MIN_Y	MESH_INSET
-  #define MESH_MAX_Y	(Y_BED_SIZE - (MESH_INSET))
+  #define MESH_MIN_X MESH_INSET
+  #define MESH_MAX_X (X_BED_SIZE - (MESH_INSET))
+  #define MESH_MIN_Y MESH_INSET
+  #define MESH_MAX_Y (Y_BED_SIZE - (MESH_INSET))
 #elif ENABLED(AUTO_BED_LEVELING_UBL)
-  #define UBL_MESH_MIN_X	UBL_MESH_INSET
-  #define UBL_MESH_MAX_X	(X_BED_SIZE - (UBL_MESH_INSET))
-  #define UBL_MESH_MIN_Y	UBL_MESH_INSET
-  #define UBL_MESH_MAX_Y	(Y_BED_SIZE - (UBL_MESH_INSET))
+  #define UBL_MESH_MIN_X UBL_MESH_INSET
+  #define UBL_MESH_MAX_X (X_BED_SIZE - (UBL_MESH_INSET))
+  #define UBL_MESH_MIN_Y UBL_MESH_INSET
+  #define UBL_MESH_MAX_Y (Y_BED_SIZE - (UBL_MESH_INSET))
 
   // If this is defined, the currently active mesh will be saved in the
   // current slot on M500.
@@ -731,9 +719,9 @@
 // The number of linear motions that can be in the plan at any give time.
 // THE BLOCK_BUFFER_SIZE NEEDS TO BE A POWER OF 2, i.g. 8,16,32 because shifts and ors are used to do the ring-buffering.
 #if ENABLED(SDSUPPORT)
-  #define BLOCK_BUFFER_SIZE	16 // SD,LCD,Buttons take more memory, block buffer needs to be smaller
+  #define BLOCK_BUFFER_SIZE 16 // SD,LCD,Buttons take more memory, block buffer needs to be smaller
 #else
-  #define BLOCK_BUFFER_SIZE	16 // maximize block buffer
+  #define BLOCK_BUFFER_SIZE 16 // maximize block buffer
 #endif
 
 // @section serial
@@ -742,14 +730,36 @@
 #define MAX_CMD_SIZE 96
 #define BUFSIZE 4
 
-// Transfer Buffer Size
+// Transmission to Host Buffer Size
 // To save 386 bytes of PROGMEM (and TX_BUFFER_SIZE+3 bytes of RAM) set to 0.
 // To buffer a simple "ok" you need 4 bytes.
 // For ADVANCED_OK (M105) you need 32 bytes.
 // For debug-echo: 128 bytes for the optimal speed.
 // Other output doesn't need to be that speedy.
 // :[0, 2, 4, 8, 16, 32, 64, 128, 256]
-#define TX_BUFFER_SIZE	0
+#define TX_BUFFER_SIZE 0
+
+// Host Receive Buffer Size
+// Without XON/XOFF flow control (see SERIAL_XON_XOFF below) 32 bytes should be enough.
+// To use flow control, set this buffer size to at least 1024 bytes.
+// :[0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]
+//#define RX_BUFFER_SIZE 1024
+
+#if RX_BUFFER_SIZE >= 1024
+  // Enable to have the controller send XON/XOFF control characters to
+  // the host to signal the RX buffer is becoming full.
+  //#define SERIAL_XON_XOFF
+#endif
+
+#if ENABLED(SDSUPPORT)
+  // Enable this option to collect and display the maximum
+  // RX queue usage after transferring a file to SD.
+  //#define SERIAL_STATS_MAX_RX_QUEUED
+
+  // Enable this option to collect and display the number
+  // of dropped bytes after a file transfer to SD.
+  //#define SERIAL_STATS_DROPPED_RX
+#endif
 
 // Enable an emergency-command parser to intercept certain commands as they
 // enter the serial receive buffer, so they cannot be blocked.
@@ -761,7 +771,7 @@
 // Therefore some clients abort after 30 seconds in a timeout.
 // Some other clients start sending commands while receiving a 'wait'.
 // This "wait" is only sent when the buffer is empty. 1 second is a good value here.
-//#define NO_TIMEOUTS 1000	// Milliseconds
+//#define NO_TIMEOUTS 1000 // Milliseconds
 
 // Some clients will have this feature soon. This could make the NO_TIMEOUTS unnecessary.
 //#define ADVANCED_OK
@@ -785,16 +795,16 @@
  */
 //#define FWRETRACT  // ONLY PARTIALLY TESTED
 #if ENABLED(FWRETRACT)
-  #define MIN_AUTORETRACT		0.1			// When auto-retract is on, convert E moves of this length and over
-  #define MAX_AUTORETRACT		10.0		// Upper limit for auto-retract conversion
-  #define RETRACT_LENGTH		3			// Default retract length (positive mm)
-  #define RETRACT_LENGTH_SWAP	13          // Default swap retract length (positive mm), for extruder change
-  #define RETRACT_FEEDRATE		45			// Default feedrate for retracting (mm/s)
-  #define RETRACT_ZLIFT			0			// Default retract Z-lift
-  #define RETRACT_RECOVER_LENGTH		0	// Default additional recover length (mm, added to retract length when recovering)
-  #define RETRACT_RECOVER_LENGTH_SWAP	0	// Default additional swap recover length (mm, added to retract length when recovering from extruder change)
-  #define RETRACT_RECOVER_FEEDRATE		8	// Default feedrate for recovering from retraction (mm/s)
-  #define RETRACT_RECOVER_FEEDRATE_SWAP	8	// Default feedrate for recovering from swap retraction (mm/s)
+  #define MIN_AUTORETRACT 0.1             // When auto-retract is on, convert E moves of this length and over
+  #define MAX_AUTORETRACT 10.0            // Upper limit for auto-retract conversion
+  #define RETRACT_LENGTH 3                // Default retract length (positive mm)
+  #define RETRACT_LENGTH_SWAP 13          // Default swap retract length (positive mm), for extruder change
+  #define RETRACT_FEEDRATE 45             // Default feedrate for retracting (mm/s)
+  #define RETRACT_ZLIFT 0                 // Default retract Z-lift
+  #define RETRACT_RECOVER_LENGTH 0        // Default additional recover length (mm, added to retract length when recovering)
+  #define RETRACT_RECOVER_LENGTH_SWAP 0   // Default additional swap recover length (mm, added to retract length when recovering from extruder change)
+  #define RETRACT_RECOVER_FEEDRATE 8      // Default feedrate for recovering from retraction (mm/s)
+  #define RETRACT_RECOVER_FEEDRATE_SWAP 8 // Default feedrate for recovering from swap retraction (mm/s)
 #endif
 
 /**
@@ -861,9 +871,9 @@
   //#define E3_IS_TMC
   //#define E4_IS_TMC
 
-  #define X_MAX_CURRENT     1000	// in mA
-  #define X_SENSE_RESISTOR    91	// in mOhms
-  #define X_MICROSTEPS        16	// number of microsteps
+  #define X_MAX_CURRENT     1000 // in mA
+  #define X_SENSE_RESISTOR    91 // in mOhms
+  #define X_MICROSTEPS        16 // number of microsteps
 
   #define X2_MAX_CURRENT    1000
   #define X2_SENSE_RESISTOR   91
@@ -940,12 +950,12 @@
    * Stepper driver settings
    */
 
-  #define R_SENSE           0.11	// R_sense resistor for SilentStepStick2130
-  #define HOLD_MULTIPLIER    0.5	// Scales down the holding current from run current
-  #define INTERPOLATE          1	// Interpolate X/Y/Z_MICROSTEPS to 256
+  #define R_SENSE           0.11  // R_sense resistor for SilentStepStick2130
+  #define HOLD_MULTIPLIER    0.5  // Scales down the holding current from run current
+  #define INTERPOLATE          1  // Interpolate X/Y/Z_MICROSTEPS to 256
 
-  #define X_CURRENT         1000	// rms current in mA. Multiply by 1.41 for peak current.
-  #define X_MICROSTEPS        16	// 0..256
+  #define X_CURRENT         1000  // rms current in mA. Multiply by 1.41 for peak current.
+  #define X_MICROSTEPS        16  // 0..256
 
   #define Y_CURRENT         1000
   #define Y_MICROSTEPS        16
@@ -1012,7 +1022,7 @@
    */
   //#define HYBRID_THRESHOLD
 
-  #define X_HYBRID_THRESHOLD     100	// [mm/s]
+  #define X_HYBRID_THRESHOLD     100  // [mm/s]
   #define X2_HYBRID_THRESHOLD    100
   #define Y_HYBRID_THRESHOLD     100
   #define Y2_HYBRID_THRESHOLD    100
@@ -1081,10 +1091,10 @@
   //#define E3_IS_L6470
   //#define E4_IS_L6470
 
-  #define X_MICROSTEPS      16	// number of microsteps
-  #define X_K_VAL           50	// 0 - 255, Higher values, are higher power. Be careful not to go too high
-  #define X_OVERCURRENT   2000	// maxc current in mA. If the current goes over this value, the driver will switch off
-  #define X_STALLCURRENT  1500	// current in mA where the driver will detect a stall
+  #define X_MICROSTEPS      16 // number of microsteps
+  #define X_K_VAL           50 // 0 - 255, Higher values, are higher power. Be careful not to go too high
+  #define X_OVERCURRENT   2000 // maxc current in mA. If the current goes over this value, the driver will switch off
+  #define X_STALLCURRENT  1500 // current in mA where the driver will detect a stall
 
   #define X2_MICROSTEPS     16
   #define X2_K_VAL          50
@@ -1274,6 +1284,7 @@
 #if ENABLED(CUSTOM_USER_MENUS)
   #define USER_SCRIPT_DONE "M117 User Script Done"
   #define USER_SCRIPT_AUDIBLE_FEEDBACK
+  //#define USER_SCRIPT_RETURN  // Return to status screen after a script
 
   #define USER_DESC_1 "Home & UBL Info"
   #define USER_GCODE_1 "G28\nG29 W"
@@ -1319,7 +1330,7 @@
 #if ENABLED(I2C_POSITION_ENCODERS)
 
   #define I2CPE_ENCODER_CNT         1                       // The number of encoders installed; max of 5
-															// encoders supported currently.
+                                                            // encoders supported currently.
 
   #define I2CPE_ENC_1_ADDR          I2CPE_PRESET_ADDR_X     // I2C address of the encoder. 30-200.
   #define I2CPE_ENC_1_AXIS          X_AXIS                  // Axis the encoder module is installed on.  <X|Y|Z|E>_AXIS.
@@ -1381,5 +1392,33 @@
   #define I2CPE_ERR_ROLLING_AVERAGE
 
 #endif // I2C_POSITION_ENCODERS
+
+/**
+ * MAX7219 Debug Matrix
+ *
+ * Add support for a low-cost 8x8 LED Matrix based on the Max7219 chip, which can be used as a status
+ * display. Requires 3 signal wires. Some useful debug options are included to demonstrate its usage.
+ *
+ * Fully assembled MAX7219 boards can be found on the internet for under $2(US).
+ * For example, see https://www.ebay.com/sch/i.html?_nkw=332349290049
+ */
+//#define MAX7219_DEBUG
+#if ENABLED(MAX7219_DEBUG)
+  #define MAX7219_CLK_PIN   64  // 77 on Re-ARM       // Configuration of the 3 pins to control the display
+  #define MAX7219_DIN_PIN   57  // 78 on Re-ARM
+  #define MAX7219_LOAD_PIN  44  // 79 on Re-ARM
+
+  /**
+   * Sample debug features
+   * If you add more debug displays, be careful to avoid conflicts!
+   */
+  #define MAX7219_DEBUG_PRINTER_ALIVE    // Blink corner LED of 8x8 matrix to show that the firmware is functioning
+  #define MAX7219_DEBUG_STEPPER_HEAD  3  // Show the stepper queue head position on this and the next LED matrix row
+  #define MAX7219_DEBUG_STEPPER_TAIL  5  // Show the stepper queue tail position on this and the next LED matrix row
+
+  #define MAX7219_DEBUG_STEPPER_QUEUE 0  // Show the current stepper queue depth on this and the next LED matrix row
+                                         // If you experience stuttering, reboots, etc. this option can reveal how
+                                         // tweaks made to the configuration are affecting the printer in real-time.
+#endif
 
 #endif // CONFIGURATION_ADV_H
