@@ -154,10 +154,10 @@
   #include "pins_GT2560_REV_A.h"      // ATmega1280, ATmega2560
 #elif MB(GT2560_REV_A_PLUS)
   #include "pins_GT2560_REV_A_PLUS.h" // ATmega1280, ATmega2560
-#elif MB(ROBOC2)
-  #include "pins_ROBOC2.h"			  // ATMega2560  [robo]
 #elif MB(ROBOMB)
   #include "pins_ROBOMB.h"  		  // ATMega2560  [robo]
+#elif MB(ROBOC2)
+  #include "pins_ROBOC2.h"			  // ATMega2560  [robo]
 
 //
 // ATmega1281, ATmega2561

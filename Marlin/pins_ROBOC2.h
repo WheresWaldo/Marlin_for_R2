@@ -29,11 +29,11 @@
 #endif
 
 #ifndef DEFAULT_MACHINE_NAME
-  #define DEFAULT_MACHINE_NAME "RoboC2"
+  #define DEFAULT_MACHINE_NAME "Robo C2"  //[BH]
 #endif
 
 #ifndef DEFAULT_SOURCE_CODE_URL
-  #define DEFAULT_SOURCE_CODE_URL "https://github.com/Robo3D/Marlin-C2"
+  #define DEFAULT_SOURCE_CODE_URL "https://github.com/WheresWaldo/Marlin_for_R2"  //[BH]
 #endif
 
 #define IS_ROBOC2
