@@ -572,9 +572,9 @@
  * When changing speed and direction, if the difference is less than the
  * value set here, it may happen instantaneously.
  */
-#define DEFAULT_XJERK                  8.0	//[BH]
-#define DEFAULT_YJERK                  8.0	//[BH]
-#define DEFAULT_ZJERK                  0.4
+#define DEFAULT_XJERK                  7.0	//[BH]
+#define DEFAULT_YJERK                  7.0	//[BH]
+#define DEFAULT_ZJERK                  0.6  //[BH]
 #define DEFAULT_EJERK                  1.0	//[robo]
 
 //===========================================================================
@@ -689,8 +689,8 @@
  *      O-- FRONT --+
  *    (0,0)
  */
-#define X_PROBE_OFFSET_FROM_EXTRUDER 0   // X offset: -left  +right  [of the nozzle]  [robo]
-#define Y_PROBE_OFFSET_FROM_EXTRUDER 30  // Y offset: -front +behind [the nozzle]  [robo]
+#define X_PROBE_OFFSET_FROM_EXTRUDER 10  // X offset: -left  +right  [of the nozzle]  [robo]
+#define Y_PROBE_OFFSET_FROM_EXTRUDER 10  // Y offset: -front +behind [the nozzle]  [BH]
 #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
 
 // X and Y axis travel speed (mm/m) between probes
@@ -719,8 +719,8 @@
  * Example: `M851 Z-5` with a CLEARANCE of 4  =>  9mm from bed to nozzle.
  *     But: `M851 Z+1` with a CLEARANCE of 2  =>  2mm from bed to nozzle.
  */
-#define Z_CLEARANCE_DEPLOY_PROBE    5 // Z Clearance for Deploy/Stow  [BH]
-#define Z_CLEARANCE_BETWEEN_PROBES  5 // Z Clearance between probe points	[BH]
+#define Z_CLEARANCE_DEPLOY_PROBE    3 // Z Clearance for Deploy/Stow  [BH]
+#define Z_CLEARANCE_BETWEEN_PROBES  3 // Z Clearance between probe points	[BH]
 
 // For M851 give a range for adjusting the Z probe offset
 #define Z_PROBE_OFFSET_RANGE_MIN -20
@@ -861,8 +861,8 @@
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
 //#define AUTO_BED_LEVELING_BILINEAR
-//#define AUTO_BED_LEVELING_UBL  //[BH]
-#define MESH_BED_LEVELING  //[BH]
+#define AUTO_BED_LEVELING_UBL  //[BH]
+//#define MESH_BED_LEVELING  //[BH]
 
 /**
  * Enable detailed logging of G28, G29, M48, etc.
@@ -931,7 +931,7 @@
   //========================= Unified Bed Leveling ============================
   //===========================================================================
 
-  #define UBL_MESH_INSET 1          // Mesh inset margin on print area
+  #define UBL_MESH_INSET	10	// Mesh inset margin on print area
   #define GRID_MAX_POINTS_X	5   // Don't use more than 15 points per axis, implementation limited.	[BH]
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
