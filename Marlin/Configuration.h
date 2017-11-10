@@ -931,7 +931,7 @@
   //========================= Unified Bed Leveling ============================
   //===========================================================================
 
-  #define UBL_MESH_INSET	10	// Mesh inset margin on print area
+  #define UBL_MESH_INSET	15	// Mesh inset margin on print area  [BH]
   #define GRID_MAX_POINTS_X	5   // Don't use more than 15 points per axis, implementation limited.	[BH]
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
@@ -951,7 +951,7 @@
   //=================================== Mesh ==================================
   //===========================================================================
 
-  #define MESH_INSET		5	// Mesh inset margin on print area  [BH]
+  #define MESH_INSET		15	// Mesh inset margin on print area  [BH]
   #define GRID_MAX_POINTS_X	5	// Don't use more than 7 points per axis, implementation limited.  [BH]
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
