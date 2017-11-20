@@ -1003,13 +1003,13 @@
 #define Z_SAFE_HOMING  //[robo]
 
 #if ENABLED(Z_SAFE_HOMING)
-  #define Z_SAFE_HOMING_X_POINT ((X_BED_SIZE) / 10)    // X point for Z homing when homing all axis (G28).
-  #define Z_SAFE_HOMING_Y_POINT (((Y_BED_SIZE) - (Y_BED_SIZE) / 10))    // Y point for Z homing when homing all axis (G28).
+  #define Z_SAFE_HOMING_X_POINT ((X_BED_SIZE) / 5)    // X point for Z homing when homing all axis (G28).
+  #define Z_SAFE_HOMING_Y_POINT (((Y_BED_SIZE) - (Y_BED_SIZE) / 5))    // Y point for Z homing when homing all axis (G28).
 #endif
 
 // Homing speeds (mm/m)
-#define HOMING_FEEDRATE_XY (5000)	//[BH]
-#define HOMING_FEEDRATE_Z  (500)	//[BH]
+#define HOMING_FEEDRATE_XY (2500)	//[BH]
+#define HOMING_FEEDRATE_Z  (250)	//[BH]
 
 //=============================================================================
 //============================= Additional Features ===========================
