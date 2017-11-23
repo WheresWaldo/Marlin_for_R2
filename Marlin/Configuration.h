@@ -361,16 +361,7 @@
   //#define  DEFAULT_Ki 1.48   //[robo]
   //#define  DEFAULT_Kd 95.10  //[robo]
 
-  // MakerGear
-  //#define  DEFAULT_Kp 7.0
-  //#define  DEFAULT_Ki 0.1
-  //#define  DEFAULT_Kd 12
-
-  // Mendel Parts V9 on 12V
-  //#define  DEFAULT_Kp 63.0
-  //#define  DEFAULT_Ki 2.25
-  //#define  DEFAULT_Kd 440
-
+  // FIND YOUR OWN: "M303 E0 C8 S220" to run autotune on the hotend 0 at 220 degreesC for 8 cycles.
 #endif // PIDTEMP
 
 //===========================================================================
@@ -403,18 +394,6 @@
   #define  DEFAULT_bedKp 429.89  //[BH]
   #define  DEFAULT_bedKi 72.89	 //[BH]
   #define  DEFAULT_bedKd 633.87	 //[BH]
-  
-  //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
-  //from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
-  //#define  DEFAULT_bedKp 10.00  //[BH]
-  //#define  DEFAULT_bedKi .023   //[BH]
-  //#define  DEFAULT_bedKd 305.4  //[BH]
-
-  //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
-  //from pidautotune
-  //#define  DEFAULT_bedKp 97.1
-  //#define  DEFAULT_bedKi 1.41
-  //#define  DEFAULT_bedKd 1675.16
 
   // FIND YOUR OWN: "M303 E-1 C8 S90" to run autotune on the bed at 90 degreesC for 8 cycles.
 #endif // PIDTEMPBED
@@ -727,7 +706,7 @@
 #define Z_PROBE_OFFSET_RANGE_MAX 20
 
 // Enable the M48 repeatability test to test probe accuracy
-//#define Z_MIN_PROBE_REPEATABILITY_TEST
+#define Z_MIN_PROBE_REPEATABILITY_TEST  //[BH]
 
 // For Inverting Stepper Enable Pins (Active Low) use 0, Non Inverting (Active High) use 1
 // :{ 0:'Low', 1:'High' }
@@ -784,8 +763,8 @@
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 196	//[robo]
-#define Y_BED_SIZE 196	//[robo]
+#define X_BED_SIZE 197	//[robo]
+#define Y_BED_SIZE 197	//[robo]
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
 #define X_MIN_POS 0
@@ -793,7 +772,7 @@
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE
 #define Y_MAX_POS Y_BED_SIZE
-#define Z_MAX_POS 260  //[robo]
+#define Z_MAX_POS 255  //[BH]
 
 // If enabled, axes won't move below MIN_POS in response to movement commands.
 //#define MIN_SOFTWARE_ENDSTOPS  //[BH]
@@ -931,8 +910,8 @@
   //========================= Unified Bed Leveling ============================
   //===========================================================================
 
-  #define UBL_MESH_INSET	15	// Mesh inset margin on print area  [BH]
-  #define GRID_MAX_POINTS_X	5   // Don't use more than 15 points per axis, implementation limited.	[BH]
+  #define UBL_MESH_INSET	20	// Mesh inset margin on print area  [BH]
+  #define GRID_MAX_POINTS_X	 5   // Don't use more than 15 points per axis, implementation limited.	[BH]
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   #define UBL_PROBE_PT_1_X 10   // Probing points for 3-Point leveling of the mesh  [BH]
@@ -951,8 +930,8 @@
   //=================================== Mesh ==================================
   //===========================================================================
 
-  #define MESH_INSET		15	// Mesh inset margin on print area  [BH]
-  #define GRID_MAX_POINTS_X	5	// Don't use more than 7 points per axis, implementation limited.  [BH]
+  #define MESH_INSET		20	// Mesh inset margin on print area  [BH]
+  #define GRID_MAX_POINTS_X	 5	// Don't use more than 7 points per axis, implementation limited.  [BH]
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   //#define MESH_G28_REST_ORIGIN // After homing all axes ('G28' or 'G28 XYZ') rest Z at Z_MIN_POS
