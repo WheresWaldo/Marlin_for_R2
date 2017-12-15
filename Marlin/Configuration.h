@@ -124,7 +124,7 @@
 
 // Optional custom name for your RepStrap or other custom machine
 // Displayed in the LCD "Ready" message
-//#define CUSTOM_MACHINE_NAME "3D Printer"
+#define CUSTOM_MACHINE_NAME "Robo R2"  //[BH]
 
 // Define this to set a unique identifier for this printer, (Used by some programs to differentiate between machines)
 // You can use an online service to generate a random UUID. (eg http://www.uuidgenerator.net/version4)
@@ -668,9 +668,9 @@
  *      O-- FRONT --+
  *    (0,0)
  */
-#define X_PROBE_OFFSET_FROM_EXTRUDER 10  // X offset: -left  +right  [of the nozzle]  [robo]
-#define Y_PROBE_OFFSET_FROM_EXTRUDER 10  // Y offset: -front +behind [the nozzle]  [BH]
-#define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
+#define X_PROBE_OFFSET_FROM_EXTRUDER  5  // X offset: -left  +right  [of the nozzle]  [BH]
+#define Y_PROBE_OFFSET_FROM_EXTRUDER 25  // Y offset: -front +behind [the nozzle]  [BH]
+#define Z_PROBE_OFFSET_FROM_EXTRUDER  0  // Z offset: -below +above  [the nozzle]
 
 // X and Y axis travel speed (mm/m) between probes
 #define XY_PROBE_SPEED 10000	 //[BH]
@@ -679,7 +679,7 @@
 #define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
 
 // Speed for the "accurate" probe of each point
-#define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 2)
+#define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 3)  // [BH]
 
 // Use double touch for probing
 #define PROBE_DOUBLE_TOUCH  //[robo]
@@ -703,7 +703,7 @@
 
 // For M851 give a range for adjusting the Z probe offset
 #define Z_PROBE_OFFSET_RANGE_MIN -20
-#define Z_PROBE_OFFSET_RANGE_MAX 20
+#define Z_PROBE_OFFSET_RANGE_MAX  20
 
 // Enable the M48 repeatability test to test probe accuracy
 #define Z_MIN_PROBE_REPEATABILITY_TEST  //[BH]
@@ -840,8 +840,8 @@
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
 //#define AUTO_BED_LEVELING_BILINEAR
-#define AUTO_BED_LEVELING_UBL  //[BH]
-//#define MESH_BED_LEVELING  //[BH]
+#define AUTO_BED_LEVELING_UBL	//[BH]
+//#define MESH_BED_LEVELING		//[BH]
 
 /**
  * Enable detailed logging of G28, G29, M48, etc.
@@ -922,7 +922,7 @@
   #define UBL_PROBE_PT_3_Y 30	//[BH]
 
   #define UBL_G26_MESH_VALIDATION // Enable G26 mesh validation	 [BH]
-  #define UBL_MESH_EDIT_MOVES_Z     // Sophisticated users prefer no movement of nozzle
+  //#define UBL_MESH_EDIT_MOVES_Z   // Sophisticated users prefer no movement of nozzle, no LCD  [BH]
 
 #elif ENABLED(MESH_BED_LEVELING)
 
@@ -1037,12 +1037,12 @@
 
 // Preheat Constants
 #define PREHEAT_1_TEMP_HOTEND	210	//[BH]
-#define PREHEAT_1_TEMP_BED		55	//[BH]
+#define PREHEAT_1_TEMP_BED		 55	//[BH]
 #define PREHEAT_1_FAN_SPEED     128	// Value from 0 to 255
 
 #define PREHEAT_2_TEMP_HOTEND	235	//[BH]
-#define PREHEAT_2_TEMP_BED		80	//[robo]
-#define PREHEAT_2_FAN_SPEED     0 // Value from 0 to 255
+#define PREHEAT_2_TEMP_BED		 80	//[robo]
+#define PREHEAT_2_FAN_SPEED       0 // Value from 0 to 255
 
 /**
  * Nozzle Park -- EXPERIMENTAL
