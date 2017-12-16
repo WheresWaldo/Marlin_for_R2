@@ -170,8 +170,10 @@
   #include "pins_GT2560_REV_A.h"      // ATmega1280, ATmega2560
 #elif MB(GT2560_REV_A_PLUS)
   #include "pins_GT2560_REV_A_PLUS.h" // ATmega1280, ATmega2560
-#elif MB(SILVER_GATE)
-  #include "pins_SILVER_GATE.h"       // ATmega2561
+#elif MB(ROBOMB)
+  #include "pins_ROBOMB.h"  		  // ATMega2560  [robo]
+#elif MB(ROBOC2)
+  #include "pins_ROBOC2.h"			  // ATMega2560  [robo]
 
 //
 // ATmega1281, ATmega2561
@@ -179,6 +181,8 @@
 
 #elif MB(MINITRONICS)
   #include "pins_MINITRONICS.h"       // ATmega1281
+#elif MB(SILVER_GATE)
+  #include "pins_SILVER_GATE.h"       // ATmega2561
 
 //
 // Sanguinololu and Derivatives - ATmega644P, ATmega1284P
