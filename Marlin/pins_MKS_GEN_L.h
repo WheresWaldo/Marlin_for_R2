@@ -20,38 +20,20 @@
  *
  */
 
-#ifndef __SPI_H__
-#define __SPI_H__
+/**
+ * MKS GEN L – Arduino Mega2560 with RAMPS v1.4 pin assignments
+ */
 
-#include <stdint.h>
-#include "softspi.h"
+#if HOTENDS > 2 || E_STEPPERS > 2
+  #error "MKS GEN L supports up to 2 hotends / E-steppers. Comment out this line to continue."
+#endif
 
-template<uint8_t MisoPin, uint8_t MosiPin, uint8_t SckPin>
-class SPI {
-  static SoftSPI<MisoPin, MosiPin, SckPin> softSPI;
-  public:
-    FORCE_INLINE static void init() { softSPI.begin(); }
-    FORCE_INLINE static void send(uint8_t data) { softSPI.send(data); }
-    FORCE_INLINE static uint8_t receive() { return softSPI.receive(); }
-};
+#define BOARD_NAME "MKS GEN L"
 
+//
+// Heaters / Fans
+//
+// Power outputs EFBF or EFBE
+#define MOSFET_D_PIN 7
 
-// Hardware SPI
-template<>
-class SPI<MISO_PIN, MOSI_PIN, SCK_PIN> {
-  public:
-    FORCE_INLINE static void init() {
-        OUT_WRITE(SCK_PIN, LOW);
-        OUT_WRITE(MOSI_PIN, HIGH);
-        SET_INPUT(MISO_PIN);
-        WRITE(MISO_PIN, HIGH);
-    }
-    FORCE_INLINE static uint8_t receive() {
-      SPDR = 0;
-      for (;!TEST(SPSR, SPIF););
-      return SPDR;
-    }
-
-};
-
-#endif // __SPI_H__
+#include "pins_RAMPS.h"

@@ -21,25 +21,24 @@
  */
 
 /**
- * Polish
- *
- * LCD Menu Messages
- * See also http://marlinfw.org/docs/development/lcd_language.html
- *
+ * neopixel.h
  */
-#ifndef LANGUAGE_PL_H
-#define LANGUAGE_PL_H
 
-#define MAPPER_C3C4C5_PL
-#define DISPLAY_CHARSET_ISO10646_PL
+#include "MarlinConfig.h"
 
-/**
- * One version with accented characters and one without
- */
-#if ENABLED(DOGLCD)
-  #include "language_pl-DOGM.h"
+#define NEOPIXEL_IS_RGB  (NEOPIXEL_TYPE == NEO_RGB || NEOPIXEL_TYPE == NEO_RBG || NEOPIXEL_TYPE == NEO_GRB || NEOPIXEL_TYPE == NEO_GBR || NEOPIXEL_TYPE == NEO_BRG || NEOPIXEL_TYPE == NEO_BGR)
+#define NEOPIXEL_IS_RGBW !NEOPIXEL_IS_RGB
+
+#if NEOPIXEL_IS_RGB
+  #define NEO_WHITE 255, 255, 255, 0
 #else
-  #include "language_pl-HD44780.h"
+  #define NEO_WHITE 0, 0, 0, 255
 #endif
 
-#endif // LANGUAGE_PL_H
+#include <Adafruit_NeoPixel.h>
+#include <stdint.h>
+
+void setup_neopixel();
+void set_neopixel_color(const uint32_t color);
+
+extern Adafruit_NeoPixel pixels;

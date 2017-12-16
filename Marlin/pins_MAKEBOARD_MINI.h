@@ -20,29 +20,20 @@
  *
  */
 
-#ifndef HEX_PRINT_ROUTINES_H
-#define HEX_PRINT_ROUTINES_H
+#include "pins_RAMPS.h"
 
-#include "MarlinConfig.h"
-#include "gcode.h"
-
-#if ENABLED(AUTO_BED_LEVELING_UBL) || ENABLED(M100_FREE_MEMORY_WATCHER) || ENABLED(DEBUG_GCODE_PARSER)
+#undef BOARD_NAME
+#define BOARD_NAME "MAKEBOARD_MINI"
 
 //
-// Utility functions to create and print hex strings as nybble, byte, and word.
+// Only 3 Limit Switch plugs on Micromake C1
 //
-
-inline char hex_nybble(const uint8_t n) {
-  return (n & 0xF) + ((n & 0xF) < 10 ? '0' : 'A' - 10);
-}
-char* hex_byte(const uint8_t b);
-char* hex_word(const uint16_t w);
-char* hex_address(const void * const w);
-
-void print_hex_nybble(const uint8_t n);
-void print_hex_byte(const uint8_t b);
-void print_hex_word(const uint16_t w);
-void print_hex_address(const void * const w);
-
-#endif // AUTO_BED_LEVELING_UBL || M100_FREE_MEMORY_WATCHER || DEBUG_GCODE_PARSER
-#endif // HEX_PRINT_ROUTINES_H
+#undef X_MIN_PIN
+#undef Y_MIN_PIN
+#undef Z_MIN_PIN
+#undef X_MAX_PIN
+#undef Y_MAX_PIN
+#undef Z_MAX_PIN
+#define X_STOP_PIN          2
+#define Y_STOP_PIN         15
+#define Z_STOP_PIN         19
