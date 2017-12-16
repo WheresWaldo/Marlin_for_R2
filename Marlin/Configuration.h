@@ -74,7 +74,7 @@
 // User-specified version info of this build to display in [Pronterface, etc] terminal window during
 // startup. Implementation of an idea by Prof Braino to inform user that any changes made to this
 // build by the user have been successfully uploaded into firmware.
-#define STRING_CONFIG_H_AUTHOR "([BH], R2 config)" // Who made the changes.
+#define STRING_CONFIG_H_AUTHOR "([BH], R2 config)" // Who made the changes.	 [BH]
 //#define SHOW_BOOTSCREEN  // [robo]
 #define STRING_SPLASH_LINE1 SHORT_BUILD_VERSION // will be shown during bootup in line 1
 #define STRING_SPLASH_LINE2 WEBSITE_URL         // will be shown during bootup in line 2
@@ -1029,7 +1029,7 @@
 
 #if ENABLED(Z_SAFE_HOMING)
   #define Z_SAFE_HOMING_X_POINT ((X_BED_SIZE) / 6)    // X point for Z homing when homing all axes (G28).  [BH]
-  #define Z_SAFE_HOMING_Y_POINT ((Y_BED_SIZE) / 6)    // Y point for Z homing when homing all axes (G28).  [BH]
+  #define Z_SAFE_HOMING_Y_POINT (((Y_BED_SIZE) - (Y_BED_SIZE) / 6))    // Y point for Z homing when homing all axes (G28).  [BH] left rear of bed.
 #endif
 
 // Homing speeds (mm/m)
