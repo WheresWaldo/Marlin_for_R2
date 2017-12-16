@@ -18,6 +18,7 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+   C2 modificatioins by [BH]
 */
 
 #if !defined(__AVR_ATmega1280__) && !defined(__AVR_ATmega2560__)
