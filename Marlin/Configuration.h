@@ -956,8 +956,8 @@
 
   //#define MESH_EDIT_GFX_OVERLAY   // Display a graphics overlay while editing the mesh
 
-  #define MESH_INSET 10             // Mesh inset margin on print area  [BH]
-  #define GRID_MAX_POINTS_X 5       // Don't use more than 15 points per axis, implementation limited.  [BH]
+  #define MESH_INSET        15  // Mesh inset margin on print area  [BH]
+  #define GRID_MAX_POINTS_X  5  // Don't use more than 15 points per axis, implementation limited.  [BH]
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   #define UBL_PROBE_PT_1_X  10      // Probing points for 3-Point leveling of the mesh  [BH]
@@ -976,8 +976,8 @@
   //=================================== Mesh ==================================
   //===========================================================================
 
-  #define MESH_INSET 		10    // Mesh inset margin on print area
-  #define GRID_MAX_POINTS_X  5    // Don't use more than 7 points per axis, implementation limited.  [BH]
+  #define MESH_INSET 		15  // Mesh inset margin on print area  [BH]
+  #define GRID_MAX_POINTS_X  5  // Don't use more than 7 points per axis, implementation limited.  [BH]
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   //#define MESH_G28_REST_ORIGIN // After homing all axes ('G28' or 'G28 XYZ') rest Z at Z_MIN_POS
@@ -1028,8 +1028,8 @@
 #define Z_SAFE_HOMING  // [robo]
 
 #if ENABLED(Z_SAFE_HOMING)
-  #define Z_SAFE_HOMING_X_POINT ((X_BED_SIZE) / 6)    // X point for Z homing when homing all axes (G28).  [BH]
-  #define Z_SAFE_HOMING_Y_POINT (((Y_BED_SIZE) - (Y_BED_SIZE) / 6))    // Y point for Z homing when homing all axes (G28).  [BH] left rear of bed.
+  #define Z_SAFE_HOMING_X_POINT ((X_BED_SIZE) / 8)    // X point for Z homing when homing all axes (G28).  [BH]
+  #define Z_SAFE_HOMING_Y_POINT (((Y_BED_SIZE) - (Y_BED_SIZE) / 8))    // Y point for Z homing when homing all axes (G28).  [BH] left rear of bed.
 #endif
 
 // Homing speeds (mm/m)
