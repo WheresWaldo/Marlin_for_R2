@@ -325,7 +325,7 @@
 // When temperature exceeds max temp, your heater will be switched off.
 // This feature exists to protect your hotend from overheating accidentally, but *NOT* from thermistor short/failure!
 // You should use MINTEMP for thermistor short/failure protection.
-#define HEATER_0_MAXTEMP 300  // [BH] Hexagon or E3Dv6
+#define HEATER_0_MAXTEMP 300  // [BH] Hexagon @ 300; E3Dv6 @ 320
 #define HEATER_1_MAXTEMP 275
 #define HEATER_2_MAXTEMP 275
 #define HEATER_3_MAXTEMP 275
@@ -355,14 +355,14 @@
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
   // Robo R2 24V - E3Dv6 [robo]
-  #define  DEFAULT_Kp 16.58	 //[BH]
-  #define  DEFAULT_Ki  1.03	 //[BH]
-  #define  DEFAULT_Kd 66.90	 //[BH]
+  //#define  DEFAULT_Kp 16.58	 //[BH]
+  //#define  DEFAULT_Ki  1.03	 //[BH]
+  //#define  DEFAULT_Kd 66.90	 //[BH]
  
   // Robo R2 24V  [robo]
-  // #define  DEFAULT_Kp 23.56	//[BH]
-  // #define  DEFAULT_Ki 1.86	//[BH]
-  // #define  DEFAULT_Kd 74.68	//[BH]
+  #define  DEFAULT_Kp 23.56	//[BH]
+  #define  DEFAULT_Ki 1.86	//[BH]
+  #define  DEFAULT_Kd 74.68	//[BH]
 
   // Robo C2 19V  [robo]
   //#define  DEFAULT_Kp 23.75  //[robo]
@@ -560,9 +560,9 @@
  * When changing speed and direction, if the difference is less than the
  * value set here, it may happen instantaneously.
  */
-#define DEFAULT_XJERK                  7.0  // [BH]
-#define DEFAULT_YJERK                  7.0  // [BH]
-#define DEFAULT_ZJERK                  0.4  
+#define DEFAULT_XJERK                  6.0  // [BH]
+#define DEFAULT_YJERK                  6.0  // [BH]
+#define DEFAULT_ZJERK                  0.3  
 #define DEFAULT_EJERK                  1.0  // [robo]
 
 //===========================================================================
@@ -679,7 +679,7 @@
  */
 #define X_PROBE_OFFSET_FROM_EXTRUDER  5  // X offset: -left  +right  [of the nozzle] [BH]
 #define Y_PROBE_OFFSET_FROM_EXTRUDER 25  // Y offset: -front +behind [the nozzle] [BH]
-#define Z_PROBE_OFFSET_FROM_EXTRUDER  0  // Z offset: -below +above  [the nozzle]
+#define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
 
 // X and Y axis travel speed (mm/m) between probes
 #define XY_PROBE_SPEED 10000  // [BH]
@@ -688,7 +688,7 @@
 #define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
 
 // Speed for the "accurate" probe of each point
-#define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 3)  // [BH]
+#define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 4)  // [BH]
 
 // The number of probes to perform at each point.
 //   Set to 2 for a fast/slow probe, using the second probe result.
@@ -714,7 +714,7 @@
 
 // For M851 give a range for adjusting the Z probe offset
 #define Z_PROBE_OFFSET_RANGE_MIN -20
-#define Z_PROBE_OFFSET_RANGE_MAX  20
+#define Z_PROBE_OFFSET_RANGE_MAX 20
 
 // Enable the M48 repeatability test to test probe accuracy
 #define Z_MIN_PROBE_REPEATABILITY_TEST  // [BH]
@@ -943,10 +943,10 @@
   // A simple cross-product is used to estimate the plane of the bed.
   #define ABL_PROBE_PT_1_X  10  // [robo]
   #define ABL_PROBE_PT_1_Y 100  // [robo]
-  #define ABL_PROBE_PT_2_X  15  
-  #define ABL_PROBE_PT_2_Y  20
+  #define ABL_PROBE_PT_2_X 15
+  #define ABL_PROBE_PT_2_Y 20
   #define ABL_PROBE_PT_3_X 100  // [robo]
-  #define ABL_PROBE_PT_3_Y  20
+  #define ABL_PROBE_PT_3_Y 20
 
 #elif ENABLED(AUTO_BED_LEVELING_UBL)
 
@@ -960,15 +960,15 @@
   #define GRID_MAX_POINTS_X  5  // Don't use more than 15 points per axis, implementation limited.  [BH]
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
-  #define UBL_PROBE_PT_1_X  10      // Probing points for 3-Point leveling of the mesh  [BH]
-  #define UBL_PROBE_PT_1_Y 186      // [BH]
-  #define UBL_PROBE_PT_2_X  10      // [BH]
-  #define UBL_PROBE_PT_2_Y  30      // [BH]
-  #define UBL_PROBE_PT_3_X 186      // [BH]
-  #define UBL_PROBE_PT_3_Y  30      // [BH]
+  #define UBL_PROBE_PT_1_X  10  // Probing points for 3-Point leveling of the mesh  [BH]
+  #define UBL_PROBE_PT_1_Y 186  // [BH]
+  #define UBL_PROBE_PT_2_X  10  // [BH]
+  #define UBL_PROBE_PT_2_Y  30  // [BH]
+  #define UBL_PROBE_PT_3_X 186  // [BH]
+  #define UBL_PROBE_PT_3_Y  30  // [BH]
 
   #define UBL_MESH_EDIT_MOVES_Z     // Sophisticated users prefer no movement of nozzle
-  //#define UBL_SAVE_ACTIVE_ON_M500   // Save the currently active mesh in the current slot on M500  [BH] no LCD
+  //#define UBL_SAVE_ACTIVE_ON_M500  // Save the currently active mesh in the current slot on M500  [BH] no LCD
 
 #elif ENABLED(MESH_BED_LEVELING)
 
@@ -976,7 +976,7 @@
   //=================================== Mesh ==================================
   //===========================================================================
 
-  #define MESH_INSET 		15  // Mesh inset margin on print area  [BH]
+  #define MESH_INSET        15  // Mesh inset margin on print area [BH]
   #define GRID_MAX_POINTS_X  5  // Don't use more than 7 points per axis, implementation limited.  [BH]
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
@@ -992,7 +992,7 @@
 
 #if ENABLED(LCD_BED_LEVELING)
   #define MBL_Z_STEP        0.02  // Step size while manually probing Z axis.  [BH]
-  #define LCD_PROBE_Z_RANGE 4     // Z Range centered on Z_MIN_POS for LCD Z adjustment
+  #define LCD_PROBE_Z_RANGE 4 // Z Range centered on Z_MIN_POS for LCD Z adjustment
 #endif
 
 // Add a menu item to move between bed corners for manual bed adjustment
@@ -1033,8 +1033,8 @@
 #endif
 
 // Homing speeds (mm/m)
-#define HOMING_FEEDRATE_XY (3000)
-#define HOMING_FEEDRATE_Z  (240)
+#define HOMING_FEEDRATE_XY (50*60)
+#define HOMING_FEEDRATE_Z  (4*60)
 
 // @section calibrate
 
@@ -1145,10 +1145,10 @@
 
 #define PREHEAT_2_TEMP_HOTEND 230  // [BH]
 #define PREHEAT_2_TEMP_BED     80  // [BH]
-#define PREHEAT_2_FAN_SPEED     0  // Value from 0 to 255
+#define PREHEAT_2_FAN_SPEED     0 // Value from 0 to 255
 
 /**
- * Nozzle Park -- EXPERIMENTAL
+ * Nozzle Park
  *
  * Park the nozzle at the given XYZ position on idle or G27.
  *
@@ -1163,6 +1163,8 @@
 #if ENABLED(NOZZLE_PARK_FEATURE)
   // Specify a park position as { X, Y, Z }
   #define NOZZLE_PARK_POINT { (X_MIN_POS + 10), (Y_MAX_POS - 10), 20 }
+  #define NOZZLE_PARK_XY_FEEDRATE 100   // X and Y axes feedrate in mm/s (also used for delta printers Z axis)
+  #define NOZZLE_PARK_Z_FEEDRATE 5      // Z axis feedrate in mm/s (not used for delta printers)
 #endif
 
 /**
@@ -1619,12 +1621,14 @@
 //#define CR10_STOCKDISPLAY
 
 //
-// MKS OLED 1.3" 128 × 64 FULL GRAPHICS CONTROLLER
+// MKS OLED 1.3" 128x64 FULL GRAPHICS CONTROLLER
 // http://reprap.org/wiki/MKS_12864OLED
 //
 // Tiny, but very sharp OLED display
+// If there is a pixel shift, try the other controller.
 //
-//#define MKS_12864OLED
+//#define MKS_12864OLED          // Uses the SH1106 controller (default)
+//#define MKS_12864OLED_SSD1306  // Uses the SSD1306 controller
 
 // Silvergate GLCD controller
 // http://github.com/android444/Silvergate
