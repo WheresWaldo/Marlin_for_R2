@@ -1063,6 +1063,7 @@ void MarlinSettings::postprocess() {
       //
       // Volumetric & Filament Size
       //
+
       #if DISABLED(NO_VOLUMETRICS)
 
         EEPROM_READ(parser.volumetric_enabled);
@@ -1071,8 +1072,11 @@ void MarlinSettings::postprocess() {
           EEPROM_READ(dummy);
           if (q < COUNT(planner.filament_size)) planner.filament_size[q] = dummy;
         }
-
       #endif
+
+      //
+      // TMC2130 Stepper Current
+      //
 
       //
       // TMC2130 Stepper Current
@@ -1599,6 +1603,14 @@ void MarlinSettings::reset() {
     uint32_t tmp_motor_current_setting[3] = PWM_MOTOR_CURRENT;
     for (uint8_t q = 3; q--;)
       stepper.digipot_current(q, (stepper.motor_current_setting[q] = tmp_motor_current_setting[q]));
+  #endif
+
+  #if ENABLED(SKEW_CORRECTION_GCODE)
+    planner.xy_skew_factor = XY_SKEW_FACTOR;
+    #if ENABLED(SKEW_CORRECTION_FOR_Z)
+      planner.xz_skew_factor = XZ_SKEW_FACTOR;
+      planner.yz_skew_factor = YZ_SKEW_FACTOR;
+    #endif
   #endif
 
   #if ENABLED(SKEW_CORRECTION_GCODE)

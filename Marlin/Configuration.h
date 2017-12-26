@@ -325,6 +325,7 @@
 // When temperature exceeds max temp, your heater will be switched off.
 // This feature exists to protect your hotend from overheating accidentally, but *NOT* from thermistor short/failure!
 // You should use MINTEMP for thermistor short/failure protection.
+
 #define HEATER_0_MAXTEMP 300  // [BH] Hexagon @ 300; E3Dv6 @ 320
 #define HEATER_1_MAXTEMP 275
 #define HEATER_2_MAXTEMP 275
@@ -360,9 +361,9 @@
   //#define  DEFAULT_Kd 66.90	 //[BH]
  
   // Robo R2 24V  [robo]
-  #define  DEFAULT_Kp 23.56	//[BH]
-  #define  DEFAULT_Ki 1.86	//[BH]
-  #define  DEFAULT_Kd 74.68	//[BH]
+  // #define  DEFAULT_Kp 23.56	//[BH]
+  // #define  DEFAULT_Ki 1.86	//[BH]
+  // #define  DEFAULT_Kd 74.68	//[BH]
 
   // Robo C2 19V  [robo]
   //#define  DEFAULT_Kp 23.75  //[robo]
@@ -560,10 +561,10 @@
  * When changing speed and direction, if the difference is less than the
  * value set here, it may happen instantaneously.
  */
-#define DEFAULT_XJERK                  6.0  // [BH]
-#define DEFAULT_YJERK                  6.0  // [BH]
-#define DEFAULT_ZJERK                  0.3  
-#define DEFAULT_EJERK                  1.0  // [robo]
+#define DEFAULT_XJERK  6.0  // [BH]
+#define DEFAULT_YJERK  6.0  // [BH]
+#define DEFAULT_ZJERK  0.3  
+#define DEFAULT_EJERK  1.0  // [robo]
 
 //===========================================================================
 //============================= Z Probe Options =============================
@@ -679,7 +680,7 @@
  */
 #define X_PROBE_OFFSET_FROM_EXTRUDER  5  // X offset: -left  +right  [of the nozzle] [BH]
 #define Y_PROBE_OFFSET_FROM_EXTRUDER 25  // Y offset: -front +behind [the nozzle] [BH]
-#define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
+#define Z_PROBE_OFFSET_FROM_EXTRUDER  0  // Z offset: -below +above  [the nozzle]
 
 // X and Y axis travel speed (mm/m) between probes
 #define XY_PROBE_SPEED 10000  // [BH]
@@ -943,10 +944,10 @@
   // A simple cross-product is used to estimate the plane of the bed.
   #define ABL_PROBE_PT_1_X  10  // [robo]
   #define ABL_PROBE_PT_1_Y 100  // [robo]
-  #define ABL_PROBE_PT_2_X 15
-  #define ABL_PROBE_PT_2_Y 20
+  #define ABL_PROBE_PT_2_X  15  
+  #define ABL_PROBE_PT_2_Y  20
   #define ABL_PROBE_PT_3_X 100  // [robo]
-  #define ABL_PROBE_PT_3_Y 20
+  #define ABL_PROBE_PT_3_Y  20
 
 #elif ENABLED(AUTO_BED_LEVELING_UBL)
 
@@ -992,7 +993,7 @@
 
 #if ENABLED(LCD_BED_LEVELING)
   #define MBL_Z_STEP        0.02  // Step size while manually probing Z axis.  [BH]
-  #define LCD_PROBE_Z_RANGE 4 // Z Range centered on Z_MIN_POS for LCD Z adjustment
+  #define LCD_PROBE_Z_RANGE 4     // Z Range centered on Z_MIN_POS for LCD Z adjustment
 #endif
 
 // Add a menu item to move between bed corners for manual bed adjustment
@@ -1145,7 +1146,7 @@
 
 #define PREHEAT_2_TEMP_HOTEND 230  // [BH]
 #define PREHEAT_2_TEMP_BED     80  // [BH]
-#define PREHEAT_2_FAN_SPEED     0 // Value from 0 to 255
+#define PREHEAT_2_FAN_SPEED     0  // Value from 0 to 255
 
 /**
  * Nozzle Park
@@ -1629,6 +1630,11 @@
 //
 //#define MKS_12864OLED          // Uses the SH1106 controller (default)
 //#define MKS_12864OLED_SSD1306  // Uses the SSD1306 controller
+
+// Silvergate GLCD controller
+// http://github.com/android444/Silvergate
+//
+//#define SILVER_GATE_GLCD_CONTROLLER
 
 // Silvergate GLCD controller
 // http://github.com/android444/Silvergate

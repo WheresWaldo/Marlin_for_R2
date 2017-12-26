@@ -4208,7 +4208,6 @@ void home_all_axes() { gcode_G28(true); }
       lcd_wait_for_move = false;
     #endif
   }
-
 #endif
 
 #if ENABLED(MESH_BED_LEVELING)
@@ -4321,7 +4320,21 @@ void home_all_axes() { gcode_G28(true); }
           BUZZ(100, 659);
           BUZZ(100, 698);
           mbl.has_mesh = true;
+          home_all_axes();
+          set_bed_leveling_enabled(true);
 
+          #if ENABLED(MESH_G28_REST_ORIGIN)
+            current_position[Z_AXIS] = Z_MIN_POS;
+            set_destination_from_current();
+            buffer_line_to_destination(homing_feedrate(Z_AXIS));
+            stepper.synchronize();
+          #endif
+
+          #if ENABLED(LCD_BED_LEVELING)
+            lcd_wait_for_move = false;
+          #endif
+        }
+        break;
           home_all_axes();
           set_bed_leveling_enabled(true);
 
@@ -8516,6 +8529,13 @@ inline void gcode_M115() {
       #endif
     );
 
+    // BUILD_PERCENT (M73)
+    #if ENABLED(LCD_SET_PROGRESS_MANUALLY)
+      SERIAL_PROTOCOLLNPGM("Cap:BUILD_PERCENT:1");
+    #else
+      SERIAL_PROTOCOLLNPGM("Cap:BUILD_PERCENT:0");
+    #endif
+
     // SOFTWARE_POWER (M80, M81)
     cap_line(PSTR("SOFTWARE_POWER")
       #if HAS_POWER_SWITCH
@@ -9163,6 +9183,42 @@ inline void gcode_M226() {
   }
 
 #endif // HAS_SERVOS
+
+#if ENABLED(BABYSTEPPING)
+
+  #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
+    FORCE_INLINE void mod_zprobe_zoffset(const float &offs) {
+      zprobe_zoffset += offs;
+      SERIAL_ECHO_START();
+      SERIAL_ECHOLNPAIR(MSG_PROBE_Z_OFFSET ": ", zprobe_zoffset);
+    }
+  #endif
+
+  /**
+   * M290: Babystepping
+   */
+  inline void gcode_M290() {
+    #if ENABLED(BABYSTEP_XY)
+      for (uint8_t a = X_AXIS; a <= Z_AXIS; a++)
+        if (parser.seenval(axis_codes[a]) || (a == Z_AXIS && parser.seenval('S'))) {
+          const float offs = constrain(parser.value_axis_units((AxisEnum)a), -2, 2);
+          thermalManager.babystep_axis((AxisEnum)a, offs * planner.axis_steps_per_mm[a]);
+          #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
+            if (a == Z_AXIS && (!parser.seen('P') || parser.value_bool())) mod_zprobe_zoffset(offs);
+          #endif
+        }
+    #else
+      if (parser.seenval('Z') || parser.seenval('S')) {
+        const float offs = constrain(parser.value_axis_units(Z_AXIS), -2, 2);
+        thermalManager.babystep_axis(Z_AXIS, offs * planner.axis_steps_per_mm[Z_AXIS]);
+        #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
+          if (!parser.seen('P') || parser.value_bool()) mod_zprobe_zoffset(offs);
+        #endif
+      }
+    #endif
+  }
+
+#endif // BABYSTEPPING
 
 #if ENABLED(BABYSTEPPING)
 
