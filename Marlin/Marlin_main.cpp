@@ -8529,13 +8529,6 @@ inline void gcode_M115() {
       #endif
     );
 
-    // BUILD_PERCENT (M73)
-    #if ENABLED(LCD_SET_PROGRESS_MANUALLY)
-      SERIAL_PROTOCOLLNPGM("Cap:BUILD_PERCENT:1");
-    #else
-      SERIAL_PROTOCOLLNPGM("Cap:BUILD_PERCENT:0");
-    #endif
-
     // SOFTWARE_POWER (M80, M81)
     cap_line(PSTR("SOFTWARE_POWER")
       #if HAS_POWER_SWITCH
