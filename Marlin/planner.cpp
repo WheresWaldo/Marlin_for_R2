@@ -94,10 +94,13 @@ float Planner::max_feedrate_mm_s[XYZE_N], // Max speeds in mm per second
 
 int16_t Planner::flow_percentage[EXTRUDERS] = ARRAY_BY_EXTRUDERS1(100); // Extrusion factor for each extruder
 
-float Planner::e_factor[EXTRUDERS],               // The flow percentage and volumetric multiplier combine to scale E movement
-      Planner::filament_size[EXTRUDERS],          // diameter of filament (in millimeters), typically around 1.75 or 2.85, 0 disables the volumetric calculations for the extruder
-      Planner::volumetric_area_nominal = CIRCLE_AREA((DEFAULT_NOMINAL_FILAMENT_DIA) * 0.5), // Nominal cross-sectional area
-      Planner::volumetric_multiplier[EXTRUDERS];  // Reciprocal of cross-sectional area of filament (in mm^2). Pre-calculated to reduce computation in the planner
+float Planner::e_factor[EXTRUDERS];               // The flow percentage and volumetric multiplier combine to scale E movement
+
+#if DISABLED(NO_VOLUMETRICS)
+  float Planner::filament_size[EXTRUDERS],          // diameter of filament (in millimeters), typically around 1.75 or 2.85, 0 disables the volumetric calculations for the extruder
+        Planner::volumetric_area_nominal = CIRCLE_AREA((DEFAULT_NOMINAL_FILAMENT_DIA) * 0.5), // Nominal cross-sectional area
+        Planner::volumetric_multiplier[EXTRUDERS];  // Reciprocal of cross-sectional area of filament (in mm^2). Pre-calculated to reduce computation in the planner
+#endif
 
 uint32_t Planner::max_acceleration_steps_per_s2[XYZE_N],
          Planner::max_acceleration_mm_per_s2[XYZE_N]; // Use M201 to override by software
@@ -168,7 +171,10 @@ float Planner::previous_speed[NUM_AXIS],
 
 #if ENABLED(LIN_ADVANCE)
   float Planner::extruder_advance_k, // Initialized by settings.load()
-        Planner::advance_ed_ratio;   // Initialized by settings.load()
+        Planner::advance_ed_ratio,   // Initialized by settings.load()
+        Planner::position_float[XYZE], // Needed for accurate maths. Steps cannot be used!
+        Planner::lin_dist_xy,
+        Planner::lin_dist_e;
 #endif
 
 #if ENABLED(ULTRA_LCD)
@@ -550,25 +556,29 @@ void Planner::check_axes_activity() {
   #endif
 }
 
-/**
- * Get a volumetric multiplier from a filament diameter.
- * This is the reciprocal of the circular cross-section area.
- * Return 1.0 with volumetric off or a diameter of 0.0.
- */
-inline float calculate_volumetric_multiplier(const float &diameter) {
-  return (parser.volumetric_enabled && diameter) ? 1.0 / CIRCLE_AREA(diameter * 0.5) : 1.0;
-}
+#if DISABLED(NO_VOLUMETRICS)
 
-/**
- * Convert the filament sizes into volumetric multipliers.
- * The multiplier converts a given E value into a length.
- */
-void Planner::calculate_volumetric_multipliers() {
-  for (uint8_t i = 0; i < COUNT(filament_size); i++) {
-    volumetric_multiplier[i] = calculate_volumetric_multiplier(filament_size[i]);
-    refresh_e_factor(i);
+  /**
+   * Get a volumetric multiplier from a filament diameter.
+   * This is the reciprocal of the circular cross-section area.
+   * Return 1.0 with volumetric off or a diameter of 0.0.
+   */
+  inline float calculate_volumetric_multiplier(const float &diameter) {
+    return (parser.volumetric_enabled && diameter) ? 1.0 / CIRCLE_AREA(diameter * 0.5) : 1.0;
   }
-}
+
+  /**
+   * Convert the filament sizes into volumetric multipliers.
+   * The multiplier converts a given E value into a length.
+   */
+  void Planner::calculate_volumetric_multipliers() {
+    for (uint8_t i = 0; i < COUNT(filament_size); i++) {
+      volumetric_multiplier[i] = calculate_volumetric_multiplier(filament_size[i]);
+      refresh_e_factor(i);
+    }
+  }
+
+#endif // !NO_VOLUMETRICS
 
 #if ENABLED(FILAMENT_WIDTH_SENSOR)
   /**
@@ -724,7 +734,9 @@ void Planner::_buffer_steps(const int32_t (&target)[XYZE], float fr_mm_s, const 
     SERIAL_ECHOLNPGM(" steps)");
   //*/
 
-  #if ENABLED(PREVENT_COLD_EXTRUSION) || ENABLED(PREVENT_LENGTHY_EXTRUDE)
+  // If LIN_ADVANCE is disabled then do E move prevention with integers
+  // Otherwise it's done in _buffer_segment.
+  #if DISABLED(LIN_ADVANCE) && (ENABLED(PREVENT_COLD_EXTRUSION) || ENABLED(PREVENT_LENGTHY_EXTRUDE))
     if (de) {
       #if ENABLED(PREVENT_COLD_EXTRUSION)
         if (thermalManager.tooColdToExtrude(extruder)) {
@@ -743,7 +755,7 @@ void Planner::_buffer_steps(const int32_t (&target)[XYZE], float fr_mm_s, const 
         }
       #endif // PREVENT_LENGTHY_EXTRUDE
     }
-  #endif // PREVENT_COLD_EXTRUSION || PREVENT_LENGTHY_EXTRUDE
+  #endif // !LIN_ADVANCE && (PREVENT_COLD_EXTRUSION || PREVENT_LENGTHY_EXTRUDE)
 
   // Compute direction bit-mask for this block
   uint8_t dm = 0;
@@ -917,7 +929,7 @@ void Planner::_buffer_steps(const int32_t (&target)[XYZE], float fr_mm_s, const 
               enable_E2();
               g_uc_extruder_last_move[2] = (BLOCK_BUFFER_SIZE) * 2;
               DISABLE_IDLE_E(0);
-              DISABLE_IDLE_E(1);
+g               DISABLE_IDLE_E(1);
               #if EXTRUDERS > 3
                 DISABLE_IDLE_E(3);
                 #if EXTRUDERS > 4
@@ -1050,6 +1062,9 @@ void Planner::_buffer_steps(const int32_t (&target)[XYZE], float fr_mm_s, const 
     CRITICAL_SECTION_END
   #endif
 
+  block->nominal_speed = block->millimeters * inverse_secs;           //   (mm/sec) Always > 0
+  block->nominal_rate = CEIL(block->step_event_count * inverse_secs); // (step/sec) Always > 0
+
   #if ENABLED(FILAMENT_WIDTH_SENSOR)
     static float filwidth_e_count = 0, filwidth_delay_dist = 0;
 
@@ -1074,7 +1089,7 @@ void Planner::_buffer_steps(const int32_t (&target)[XYZE], float fr_mm_s, const 
         // If the index has changed (must have gone forward)...
         if (filwidth_delay_index[0] != filwidth_delay_index[1]) {
           filwidth_e_count = 0; // Reset the E movement counter
-          const uint8_t meas_sample = thermalManager.widthFil_to_size_ratio();
+          const int8_t meas_sample = thermalManager.widthFil_to_size_ratio();
           do {
             filwidth_delay_index[1] = (filwidth_delay_index[1] + 1) % MMD_CM; // The next unused slot
             measurement_delay[filwidth_delay_index[1]] = meas_sample;         // Store the measurement
@@ -1089,9 +1104,6 @@ void Planner::_buffer_steps(const int32_t (&target)[XYZE], float fr_mm_s, const 
   float max_stepper_speed = 0, min_axis_accel_ratio = 1; // ratio < 1 means acceleration ramp needed
   LOOP_XYZE(i) {
     const float cs = FABS((current_speed[i] = delta_mm[i] * inverse_secs));
-    if (cs >  max_jerk[i]) 
-      NOMORE(min_axis_accel_ratio, max_jerk[i] / cs);
-    NOLESS(max_stepper_speed, cs);
     #if ENABLED(DISTINCT_E_FACTORS)
       if (i == E_AXIS) i += extruder;
     #endif
@@ -1250,6 +1262,32 @@ void Planner::_buffer_steps(const int32_t (&target)[XYZE], float fr_mm_s, const 
     }
   #endif
 
+  /**
+   * Adapted from Průša MKS firmware
+   * https://github.com/prusa3d/Prusa-Firmware
+   *
+   * Start with a safe speed (from which the machine may halt to stop immediately).
+   */
+
+  // Exit speed limited by a jerk to full halt of a previous last segment
+  static float previous_safe_speed;
+
+  float safe_speed = block->nominal_speed;
+  uint8_t limited = 0;
+  LOOP_XYZE(i) {
+    const float jerk = FABS(current_speed[i]), maxj = max_jerk[i];
+    if (jerk > maxj) {
+      if (limited) {
+        const float mjerk = maxj * block->nominal_speed;
+        if (jerk * safe_speed > mjerk) safe_speed = mjerk / jerk;
+      }
+      else {
+        ++limited;
+        safe_speed = maxj;
+      }
+    }
+  }
+
   if (moves_queued && !UNEAR_ZERO(previous_nominal_speed)) {
     // Estimate a maximum velocity allowed at a joint of two successive segments.
     // If this maximum velocity allowed is lower than the minimum of the entry / exit safe velocities,
@@ -1261,7 +1299,7 @@ void Planner::_buffer_steps(const int32_t (&target)[XYZE], float fr_mm_s, const 
 
     // Factor to multiply the previous / current nominal velocities to get componentwise limited velocities.
     float v_factor = 1;
-    uint8_t limited = 0;
+    limited = 0;
 
     // Now limit the jerk in all axes.
     const float smaller_speed_factor = vmax_junction / previous_nominal_speed;
@@ -1337,16 +1375,16 @@ void Planner::_buffer_steps(const int32_t (&target)[XYZE], float fr_mm_s, const 
      *                                      In that case, the retract and move will be executed together.
      *                                      This leads to too many advance steps due to a huge e_acceleration.
      *                                      The math is good, but we must avoid retract moves with advance!
-     * de > 0                             : Extruder is running forward (e.g., for "Wipe while retracting" (Slic3r) or "Combing" (Cura) moves)
+     * lin_dist_e > 0                       : Extruder is running forward (e.g., for "Wipe while retracting" (Slic3r) or "Combing" (Cura) moves)
      */
     block->use_advance_lead =  esteps && (block->steps[X_AXIS] || block->steps[Y_AXIS])
                             && extruder_advance_k
                             && (uint32_t)esteps != block->step_event_count
-                            && de > 0;
+                            && lin_dist_e > 0;
     if (block->use_advance_lead)
       block->abs_adv_steps_multiplier8 = LROUND(
         extruder_advance_k
-        * (UNEAR_ZERO(advance_ed_ratio) ? de * steps_to_mm[E_AXIS_N] / HYPOT(da * steps_to_mm[X_AXIS], db * steps_to_mm[Y_AXIS]) : advance_ed_ratio) // Use the fixed ratio, if set
+        * (UNEAR_ZERO(advance_ed_ratio) ? lin_dist_e / lin_dist_xy : advance_ed_ratio) // Use the fixed ratio, if set
         * (block->nominal_speed / (float)block->nominal_rate)
         * axis_steps_per_mm[E_AXIS_N] * 256.0
       );
@@ -1364,6 +1402,136 @@ void Planner::_buffer_steps(const int32_t (&target)[XYZE], float fr_mm_s, const 
   COPY(position, target);
 
   recalculate();
+
+} // _buffer_steps()
+
+/**
+ * Planner::buffer_segment
+ *
+ * Add a new linear movement to the buffer in axis units.
+ *
+ * Leveling and kinematics should be applied ahead of calling this.
+ *
+ *  a,b,c,e   - target positions in mm and/or degrees
+ *  fr_mm_s   - (target) speed of the move
+ *  extruder  - target extruder
+ */
+void Planner::buffer_segment(const float &a, const float &b, const float &c, const float &e, const float &fr_mm_s, const uint8_t extruder) {
+  // When changing extruders recalculate steps corresponding to the E position
+  #if ENABLED(DISTINCT_E_FACTORS)
+    if (last_extruder != extruder && axis_steps_per_mm[E_AXIS_N] != axis_steps_per_mm[E_AXIS + last_extruder]) {
+      position[E_AXIS] = LROUND(position[E_AXIS] * axis_steps_per_mm[E_AXIS_N] * steps_to_mm[E_AXIS + last_extruder]);
+      last_extruder = extruder;
+    }
+  #endif
+
+  // The target position of the tool in absolute steps
+  // Calculate target position in absolute steps
+  const int32_t target[XYZE] = {
+    LROUND(a * axis_steps_per_mm[X_AXIS]),
+    LROUND(b * axis_steps_per_mm[Y_AXIS]),
+    LROUND(c * axis_steps_per_mm[Z_AXIS]),
+    LROUND(e * axis_steps_per_mm[E_AXIS_N])
+  };
+
+  // DRYRUN prevents E moves from taking place
+  if (DEBUGGING(DRYRUN)) {
+    position[E_AXIS] = target[E_AXIS];
+    #if ENABLED(LIN_ADVANCE)
+      position_float[E_AXIS] = e;
+    #endif
+  }
+
+  #if ENABLED(LIN_ADVANCE)
+    lin_dist_e = e - position_float[E_AXIS];
+  #endif
+
+  // If LIN_ADVANCE is enabled then do E move prevention with floats
+  // Otherwise it's done in _buffer_steps.
+  #if ENABLED(LIN_ADVANCE) && (ENABLED(PREVENT_COLD_EXTRUSION) || ENABLED(PREVENT_LENGTHY_EXTRUDE))
+    if (lin_dist_e) {
+      #if ENABLED(PREVENT_COLD_EXTRUSION)
+        if (thermalManager.tooColdToExtrude(extruder)) {
+          position_float[E_AXIS] = e; // Behave as if the move really took place, but ignore E part
+          position[E_AXIS] = target[E_AXIS];
+          lin_dist_e = 0;
+          SERIAL_ECHO_START();
+          SERIAL_ECHOLNPGM(MSG_ERR_COLD_EXTRUDE_STOP);
+        }
+      #endif // PREVENT_COLD_EXTRUSION
+      #if ENABLED(PREVENT_LENGTHY_EXTRUDE)
+        if (lin_dist_e * e_factor[extruder] > (EXTRUDE_MAXLENGTH)) {
+          position_float[E_AXIS] = e; // Behave as if the move really took place, but ignore E part
+          position[E_AXIS] = target[E_AXIS];
+          lin_dist_e = 0;
+          SERIAL_ECHO_START();
+          SERIAL_ECHOLNPGM(MSG_ERR_LONG_EXTRUDE_STOP);
+        }
+      #endif // PREVENT_LENGTHY_EXTRUDE
+    }
+  #endif // LIN_ADVANCE && (PREVENT_COLD_EXTRUSION || PREVENT_LENGTHY_EXTRUDE)
+
+  #if ENABLED(LIN_ADVANCE)
+    if (lin_dist_e > 0)
+      lin_dist_xy = HYPOT(a - position_float[X_AXIS], b - position_float[Y_AXIS]);
+  #endif
+
+  /* <-- add a slash to enable
+    SERIAL_ECHOPAIR("  buffer_segment FR:", fr_mm_s);
+    #if IS_KINEMATIC
+      SERIAL_ECHOPAIR(" A:", a);
+      SERIAL_ECHOPAIR(" (", position[A_AXIS]);
+      SERIAL_ECHOPAIR("->", target[A_AXIS]);
+      SERIAL_ECHOPAIR(") B:", b);
+    #else
+      SERIAL_ECHOPAIR(" X:", a);
+      SERIAL_ECHOPAIR(" (", position[X_AXIS]);
+      SERIAL_ECHOPAIR("->", target[X_AXIS]);
+      SERIAL_ECHOPAIR(") Y:", b);
+    #endif
+    SERIAL_ECHOPAIR(" (", position[Y_AXIS]);
+    SERIAL_ECHOPAIR("->", target[Y_AXIS]);
+    #if ENABLED(DELTA)
+      SERIAL_ECHOPAIR(") C:", c);
+    #else
+      SERIAL_ECHOPAIR(") Z:", c);
+    #endif
+    SERIAL_ECHOPAIR(" (", position[Z_AXIS]);
+    SERIAL_ECHOPAIR("->", target[Z_AXIS]);
+    SERIAL_ECHOPAIR(") E:", e);
+    SERIAL_ECHOPAIR(" (", position[E_AXIS]);
+    SERIAL_ECHOPAIR("->", target[E_AXIS]);
+    SERIAL_ECHOLNPGM(")");
+  //*/
+
+  // Always split the first move into two (if not homing or probing)
+  if (!blocks_queued()) {
+
+    #define _BETWEEN(A) (position[A##_AXIS] + target[A##_AXIS]) >> 1
+    const int32_t between[XYZE] = { _BETWEEN(X), _BETWEEN(Y), _BETWEEN(Z), _BETWEEN(E) };
+    DISABLE_STEPPER_DRIVER_INTERRUPT();
+
+    #if ENABLED(LIN_ADVANCE)
+      lin_dist_xy *= 0.5;
+      lin_dist_e *= 0.5;
+    #endif
+
+    _buffer_steps(between, fr_mm_s, extruder);
+
+    #if ENABLED(LIN_ADVANCE)
+      position_float[X_AXIS] = (position_float[X_AXIS] + a) * 0.5;
+      position_float[Y_AXIS] = (position_float[Y_AXIS] + b) * 0.5;
+      //position_float[Z_AXIS] = (position_float[Z_AXIS] + c) * 0.5;
+      position_float[E_AXIS] = (position_float[E_AXIS] + e) * 0.5;
+    #endif
+
+    const uint8_t next = block_buffer_head;
+    _buffer_steps(target, fr_mm_s, extruder);
+    SBI(block_buffer[next].flag, BLOCK_BIT_CONTINUED);
+    ENABLE_STEPPER_DRIVER_INTERRUPT();
+  }
+  else
+    _buffer_steps(target, fr_mm_s, extruder);
 
 } // _buffer_steps()
 
@@ -1444,6 +1612,12 @@ void Planner::buffer_segment(const float &a, const float &b, const float &c, con
 
   stepper.wake_up();
 
+  #if ENABLED(LIN_ADVANCE)
+    position_float[X_AXIS] = a;
+    position_float[Y_AXIS] = b;
+    //position_float[Z_AXIS] = c;
+    position_float[E_AXIS] = e;
+  #endif
 } // buffer_segment()
 
 /**
@@ -1464,6 +1638,12 @@ void Planner::_set_position_mm(const float &a, const float &b, const float &c, c
                 nb = position[Y_AXIS] = LROUND(b * axis_steps_per_mm[Y_AXIS]),
                 nc = position[Z_AXIS] = LROUND(c * axis_steps_per_mm[Z_AXIS]),
                 ne = position[E_AXIS] = LROUND(e * axis_steps_per_mm[_EINDEX]);
+  #if ENABLED(LIN_ADVANCE)
+    position_float[X_AXIS] = a;
+    position_float[Y_AXIS] = b;
+    //position_float[Z_AXIS] = c;
+    position_float[E_AXIS] = e;
+  #endif
   stepper.set_position(na, nb, nc, ne);
   previous_nominal_speed = 0.0; // Resets planner junction speeds. Assumes start from rest.
   ZERO(previous_speed);

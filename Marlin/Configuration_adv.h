@@ -186,7 +186,7 @@
 //#define USE_CONTROLLER_FAN
 #if ENABLED(USE_CONTROLLER_FAN)
   //#define CONTROLLER_FAN_PIN FAN1_PIN  // Set a custom pin for the controller fan
-  #define CONTROLLERFAN_SECS   60        // Duration in seconds for the fan to run after all motors are disabled
+  #define CONTROLLERFAN_SECS 60          // Duration in seconds for the fan to run after all motors are disabled
   #define CONTROLLERFAN_SPEED 255        // 255 == full speed
 #endif
 
@@ -236,13 +236,13 @@
 /**
  * M355 Case Light on-off / brightness
  */
-#define CASE_LIGHT_ENABLE
+#define CASE_LIGHT_ENABLE  // [robo]
 #if ENABLED(CASE_LIGHT_ENABLE)
-  //#define CASE_LIGHT_PIN 4                  // Override the default pin if needed
-  #define INVERT_CASE_LIGHT false             // Set true if Case Light is ON when pin is LOW
-  #define CASE_LIGHT_DEFAULT_ON true          // Set default power-up state on
-  #define CASE_LIGHT_DEFAULT_BRIGHTNESS 105   // Set default power-up brightness (0-255, requires PWM pin)
-  //#define MENU_ITEM_CASE_LIGHT              // Add a Case Light option to the LCD main menu
+  //#define CASE_LIGHT_PIN 4                // Override the default pin if needed
+  #define INVERT_CASE_LIGHT false           // Set true if Case Light is ON when pin is LOW
+  #define CASE_LIGHT_DEFAULT_ON true        // Set default power-up state on
+  #define CASE_LIGHT_DEFAULT_BRIGHTNESS 16  // Set default power-up brightness (0-255, requires PWM pin)  [BH] fairly dim
+  //#define MENU_ITEM_CASE_LIGHT            // Add a Case Light option to the LCD main menu
 #endif
 
 //===========================================================================
@@ -462,7 +462,7 @@
 //===========================================================================
 
 #define ENCODER_RATE_MULTIPLIER         // If defined, certain menu edit operations automatically multiply the steps when the encoder is moved quickly
-#define ENCODER_10X_STEPS_PER_SEC   75  // If the encoder steps per sec exceeds this value, multiply steps moved x10 to quickly advance the value
+#define ENCODER_10X_STEPS_PER_SEC 75    // If the encoder steps per sec exceeds this value, multiply steps moved x10 to quickly advance the value
 #define ENCODER_100X_STEPS_PER_SEC 160  // If the encoder steps per sec exceeds this value, multiply steps moved x100 to really quickly advance the value
 
 //#define CHDK 4        //Pin for triggering CHDK to take a picture see how to use it here http://captain-slow.dk/2014/03/09/3d-printing-timelapses/
@@ -873,15 +873,11 @@
  * If PARK_HEAD_ON_PAUSE enabled, adds the GCode M125 to pause printing and park the nozzle.
  *
  * Requires an LCD display.
+ * Requires NOZZLE_PARK_FEATURE.
  * This feature is required for the default FILAMENT_RUNOUT_SCRIPT.
  */
 //#define ADVANCED_PAUSE_FEATURE
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
-  #define PAUSE_PARK_X_POS 3                  // X position of hotend
-  #define PAUSE_PARK_Y_POS 3                  // Y position of hotend
-  #define PAUSE_PARK_Z_ADD 10                 // Z addition of hotend (lift)
-  #define PAUSE_PARK_XY_FEEDRATE 100          // X and Y axes feedrate in mm/s (also used for delta printers Z axis)
-  #define PAUSE_PARK_Z_FEEDRATE 5             // Z axis feedrate in mm/s (not used for delta printers)
   #define PAUSE_PARK_RETRACT_FEEDRATE 60      // Initial retract feedrate in mm/s
   #define PAUSE_PARK_RETRACT_LENGTH 2         // Initial retract in mm
                                               // It is a short retract used immediately after print interrupt before move to filament exchange position
@@ -1342,8 +1338,7 @@
   #define FILAMENT_SENSOR_EXTRUDER_NUM 0    // Index of the extruder that has the filament sensor. :[0,1,2,3,4]
   #define MEASUREMENT_DELAY_CM        14    // (cm) The distance from the filament sensor to the melting chamber
 
-  #define MEASURED_UPPER_LIMIT         1.85 // (mm) Upper limit used to validate sensor reading  [BH]
-  #define MEASURED_LOWER_LIMIT         1.65 // (mm) Lower limit used to validate sensor reading  [BH]
+  #define FILWIDTH_ERROR_MARGIN        1.0  // (mm) If a measurement differs too much from nominal width ignore it
   #define MAX_MEASUREMENT_DELAY       20    // (bytes) Buffer size for stored measurements (1 byte per cm). Must be larger than MEASUREMENT_DELAY_CM.
 
   #define DEFAULT_MEASURED_FILAMENT_DIA DEFAULT_NOMINAL_FILAMENT_DIA // Set measured to nominal initially
@@ -1376,13 +1371,20 @@
 #define EXTENDED_CAPABILITIES_REPORT
 
 /**
- * Volumetric extrusion default state
- * Activate to make volumetric extrusion the default method,
- * with DEFAULT_NOMINAL_FILAMENT_DIA as the default diameter.
- *
- * M200 D0 to disable, M200 Dn to set a new diameter.
+ * Disable all Volumetric extrusion options
  */
-//#define VOLUMETRIC_DEFAULT_ON
+//#define NO_VOLUMETRICS
+
+#if DISABLED(NO_VOLUMETRICS)
+  /**
+   * Volumetric extrusion default state
+   * Activate to make volumetric extrusion the default method,
+   * with DEFAULT_NOMINAL_FILAMENT_DIA as the default diameter.
+   *
+   * M200 D0 to disable, M200 Dn to set a new diameter.
+   */
+  //#define VOLUMETRIC_DEFAULT_ON
+#endif
 
 /**
  * Enable this option for a leaner build of Marlin that removes all
@@ -1438,6 +1440,14 @@
  * The host must be configured to handle the action command.
  */
 //#define ACTION_ON_KILL "poweroff"
+
+/**
+ * Specify an action command to send to the host on pause and resume.
+ * Will be sent in the form '//action:ACTION_ON_PAUSE', e.g. '//action:pause'.
+ * The host must be configured to handle the action command.
+ */
+//#define ACTION_ON_PAUSE "pause"
+//#define ACTION_ON_RESUME "resume"
 
 //===========================================================================
 //====================== I2C Position Encoder Settings ======================

@@ -325,7 +325,8 @@
 // When temperature exceeds max temp, your heater will be switched off.
 // This feature exists to protect your hotend from overheating accidentally, but *NOT* from thermistor short/failure!
 // You should use MINTEMP for thermistor short/failure protection.
-#define HEATER_0_MAXTEMP 300  // [BH] Hexagon or E3Dv6
+
+#define HEATER_0_MAXTEMP 300  // [BH] Hexagon @ 300; E3Dv6 @ 320
 #define HEATER_1_MAXTEMP 275
 #define HEATER_2_MAXTEMP 275
 #define HEATER_3_MAXTEMP 275
@@ -355,9 +356,9 @@
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
   // Robo R2 24V - E3Dv6 [robo]
-  #define  DEFAULT_Kp 16.58	 //[BH]
-  #define  DEFAULT_Ki  1.03	 //[BH]
-  #define  DEFAULT_Kd 66.90	 //[BH]
+  //#define  DEFAULT_Kp 16.58	 //[BH]
+  //#define  DEFAULT_Ki  1.03	 //[BH]
+  //#define  DEFAULT_Kd 66.90	 //[BH]
  
   // Robo R2 24V  [robo]
   // #define  DEFAULT_Kp 23.56	//[BH]
@@ -560,10 +561,10 @@
  * When changing speed and direction, if the difference is less than the
  * value set here, it may happen instantaneously.
  */
-#define DEFAULT_XJERK                  7.0  // [BH]
-#define DEFAULT_YJERK                  7.0  // [BH]
-#define DEFAULT_ZJERK                  0.4  
-#define DEFAULT_EJERK                  1.0  // [robo]
+#define DEFAULT_XJERK  6.0  // [BH]
+#define DEFAULT_YJERK  6.0  // [BH]
+#define DEFAULT_ZJERK  0.3  
+#define DEFAULT_EJERK  1.0  // [robo]
 
 //===========================================================================
 //============================= Z Probe Options =============================
@@ -688,7 +689,7 @@
 #define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
 
 // Speed for the "accurate" probe of each point
-#define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 3)  // [BH]
+#define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 4)  // [BH]
 
 // The number of probes to perform at each point.
 //   Set to 2 for a fast/slow probe, using the second probe result.
@@ -714,7 +715,7 @@
 
 // For M851 give a range for adjusting the Z probe offset
 #define Z_PROBE_OFFSET_RANGE_MIN -20
-#define Z_PROBE_OFFSET_RANGE_MAX  20
+#define Z_PROBE_OFFSET_RANGE_MAX 20
 
 // Enable the M48 repeatability test to test probe accuracy
 #define Z_MIN_PROBE_REPEATABILITY_TEST  // [BH]
@@ -956,19 +957,19 @@
 
   //#define MESH_EDIT_GFX_OVERLAY   // Display a graphics overlay while editing the mesh
 
-  #define MESH_INSET 10             // Mesh inset margin on print area  [BH]
-  #define GRID_MAX_POINTS_X 5       // Don't use more than 15 points per axis, implementation limited.  [BH]
+  #define MESH_INSET        15  // Mesh inset margin on print area  [BH]
+  #define GRID_MAX_POINTS_X  5  // Don't use more than 15 points per axis, implementation limited.  [BH]
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
-  #define UBL_PROBE_PT_1_X  10      // Probing points for 3-Point leveling of the mesh  [BH]
-  #define UBL_PROBE_PT_1_Y 186      // [BH]
-  #define UBL_PROBE_PT_2_X  10      // [BH]
-  #define UBL_PROBE_PT_2_Y  30      // [BH]
-  #define UBL_PROBE_PT_3_X 186      // [BH]
-  #define UBL_PROBE_PT_3_Y  30      // [BH]
+  #define UBL_PROBE_PT_1_X  10  // Probing points for 3-Point leveling of the mesh  [BH]
+  #define UBL_PROBE_PT_1_Y 186  // [BH]
+  #define UBL_PROBE_PT_2_X  10  // [BH]
+  #define UBL_PROBE_PT_2_Y  30  // [BH]
+  #define UBL_PROBE_PT_3_X 186  // [BH]
+  #define UBL_PROBE_PT_3_Y  30  // [BH]
 
   #define UBL_MESH_EDIT_MOVES_Z     // Sophisticated users prefer no movement of nozzle
-  //#define UBL_SAVE_ACTIVE_ON_M500   // Save the currently active mesh in the current slot on M500  [BH] no LCD
+  //#define UBL_SAVE_ACTIVE_ON_M500  // Save the currently active mesh in the current slot on M500  [BH] no LCD
 
 #elif ENABLED(MESH_BED_LEVELING)
 
@@ -976,8 +977,8 @@
   //=================================== Mesh ==================================
   //===========================================================================
 
-  #define MESH_INSET 		10    // Mesh inset margin on print area
-  #define GRID_MAX_POINTS_X  5    // Don't use more than 7 points per axis, implementation limited.  [BH]
+  #define MESH_INSET        15  // Mesh inset margin on print area [BH]
+  #define GRID_MAX_POINTS_X  5  // Don't use more than 7 points per axis, implementation limited.  [BH]
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   //#define MESH_G28_REST_ORIGIN // After homing all axes ('G28' or 'G28 XYZ') rest Z at Z_MIN_POS
@@ -1028,13 +1029,13 @@
 #define Z_SAFE_HOMING  // [robo]
 
 #if ENABLED(Z_SAFE_HOMING)
-  #define Z_SAFE_HOMING_X_POINT ((X_BED_SIZE) / 6)    // X point for Z homing when homing all axes (G28).  [BH]
-  #define Z_SAFE_HOMING_Y_POINT (((Y_BED_SIZE) - (Y_BED_SIZE) / 6))    // Y point for Z homing when homing all axes (G28).  [BH] left rear of bed.
+  #define Z_SAFE_HOMING_X_POINT ((X_BED_SIZE) / 8)    // X point for Z homing when homing all axes (G28).  [BH]
+  #define Z_SAFE_HOMING_Y_POINT (((Y_BED_SIZE) - (Y_BED_SIZE) / 8))    // Y point for Z homing when homing all axes (G28).  [BH] left rear of bed.
 #endif
 
 // Homing speeds (mm/m)
-#define HOMING_FEEDRATE_XY (3000)
-#define HOMING_FEEDRATE_Z  (240)
+#define HOMING_FEEDRATE_XY (50*60)
+#define HOMING_FEEDRATE_Z  (4*60)
 
 // @section calibrate
 
@@ -1148,7 +1149,7 @@
 #define PREHEAT_2_FAN_SPEED     0  // Value from 0 to 255
 
 /**
- * Nozzle Park -- EXPERIMENTAL
+ * Nozzle Park
  *
  * Park the nozzle at the given XYZ position on idle or G27.
  *
@@ -1163,6 +1164,8 @@
 #if ENABLED(NOZZLE_PARK_FEATURE)
   // Specify a park position as { X, Y, Z }
   #define NOZZLE_PARK_POINT { (X_MIN_POS + 10), (Y_MAX_POS - 10), 20 }
+  #define NOZZLE_PARK_XY_FEEDRATE 100   // X and Y axes feedrate in mm/s (also used for delta printers Z axis)
+  #define NOZZLE_PARK_Z_FEEDRATE 5      // Z axis feedrate in mm/s (not used for delta printers)
 #endif
 
 /**
@@ -1619,12 +1622,19 @@
 //#define CR10_STOCKDISPLAY
 
 //
-// MKS OLED 1.3" 128 × 64 FULL GRAPHICS CONTROLLER
+// MKS OLED 1.3" 128x64 FULL GRAPHICS CONTROLLER
 // http://reprap.org/wiki/MKS_12864OLED
 //
 // Tiny, but very sharp OLED display
+// If there is a pixel shift, try the other controller.
 //
-//#define MKS_12864OLED
+//#define MKS_12864OLED          // Uses the SH1106 controller (default)
+//#define MKS_12864OLED_SSD1306  // Uses the SSD1306 controller
+
+// Silvergate GLCD controller
+// http://github.com/android444/Silvergate
+//
+//#define SILVER_GATE_GLCD_CONTROLLER
 
 // Silvergate GLCD controller
 // http://github.com/android444/Silvergate
