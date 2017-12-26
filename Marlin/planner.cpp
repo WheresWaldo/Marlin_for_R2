@@ -190,6 +190,9 @@ Planner::Planner() { init(); }
 void Planner::init() {
   block_buffer_head = block_buffer_tail = 0;
   ZERO(position);
+  #if ENABLED(LIN_ADVANCE)
+    ZERO(position_float);
+  #endif
   ZERO(previous_speed);
   previous_nominal_speed = 0.0;
   #if ABL_PLANAR
@@ -1099,9 +1102,8 @@ g               DISABLE_IDLE_E(1);
     }
   #endif
 
-  // Calculate and limit speed in mm/sec for each axis, calculate minimum acceleration ratio
+  // Calculate and limit speed in mm/sec for each axis
   float current_speed[NUM_AXIS], speed_factor = 1.0; // factor <1 decreases speed
-  float max_stepper_speed = 0, min_axis_accel_ratio = 1; // ratio < 1 means acceleration ramp needed
   LOOP_XYZE(i) {
     const float cs = FABS((current_speed[i] = delta_mm[i] * inverse_secs));
     #if ENABLED(DISTINCT_E_FACTORS)
@@ -1148,18 +1150,12 @@ g               DISABLE_IDLE_E(1);
     }
   #endif // XY_FREQUENCY_LIMIT
 
-  block->nominal_speed = max_stepper_speed; // (mm/sec) Always > 0
-  block->nominal_rate = CEIL(block->step_event_count * inverse_secs); // (step/sec) Always > 0
-
   // Correct the speed
   if (speed_factor < 1.0) {
     LOOP_XYZE(i) current_speed[i] *= speed_factor;
     block->nominal_speed *= speed_factor;
     block->nominal_rate *= speed_factor;
   }
-
-  float safe_speed = block->nominal_speed * min_axis_accel_ratio;
-  static float previous_safe_speed;
 
   // Compute and limit the acceleration rate for the trapezoid generator.
   const float steps_per_mm = block->step_event_count * inverse_millimeters;
@@ -1476,6 +1472,7 @@ void Planner::buffer_segment(const float &a, const float &b, const float &c, con
       lin_dist_xy = HYPOT(a - position_float[X_AXIS], b - position_float[Y_AXIS]);
   #endif
 
+
   /* <-- add a slash to enable
     SERIAL_ECHOPAIR("  buffer_segment FR:", fr_mm_s);
     #if IS_KINEMATIC
@@ -1525,83 +1522,6 @@ void Planner::buffer_segment(const float &a, const float &b, const float &c, con
       position_float[E_AXIS] = (position_float[E_AXIS] + e) * 0.5;
     #endif
 
-    const uint8_t next = block_buffer_head;
-    _buffer_steps(target, fr_mm_s, extruder);
-    SBI(block_buffer[next].flag, BLOCK_BIT_CONTINUED);
-    ENABLE_STEPPER_DRIVER_INTERRUPT();
-  }
-  else
-    _buffer_steps(target, fr_mm_s, extruder);
-
-} // _buffer_steps()
-
-/**
- * Planner::buffer_segment
- *
- * Add a new linear movement to the buffer in axis units.
- *
- * Leveling and kinematics should be applied ahead of calling this.
- *
- *  a,b,c,e   - target positions in mm and/or degrees
- *  fr_mm_s   - (target) speed of the move
- *  extruder  - target extruder
- */
-void Planner::buffer_segment(const float &a, const float &b, const float &c, const float &e, const float &fr_mm_s, const uint8_t extruder) {
-  // When changing extruders recalculate steps corresponding to the E position
-  #if ENABLED(DISTINCT_E_FACTORS)
-    if (last_extruder != extruder && axis_steps_per_mm[E_AXIS_N] != axis_steps_per_mm[E_AXIS + last_extruder]) {
-      position[E_AXIS] = LROUND(position[E_AXIS] * axis_steps_per_mm[E_AXIS_N] * steps_to_mm[E_AXIS + last_extruder]);
-      last_extruder = extruder;
-    }
-  #endif
-
-  // The target position of the tool in absolute steps
-  // Calculate target position in absolute steps
-  const int32_t target[XYZE] = {
-    LROUND(a * axis_steps_per_mm[X_AXIS]),
-    LROUND(b * axis_steps_per_mm[Y_AXIS]),
-    LROUND(c * axis_steps_per_mm[Z_AXIS]),
-    LROUND(e * axis_steps_per_mm[E_AXIS_N])
-  };
-
-  /* <-- add a slash to enable
-    SERIAL_ECHOPAIR("  buffer_segment FR:", fr_mm_s);
-    #if IS_KINEMATIC
-      SERIAL_ECHOPAIR(" A:", a);
-      SERIAL_ECHOPAIR(" (", position[A_AXIS]);
-      SERIAL_ECHOPAIR("->", target[A_AXIS]);
-      SERIAL_ECHOPAIR(") B:", b);
-    #else
-      SERIAL_ECHOPAIR(" X:", a);
-      SERIAL_ECHOPAIR(" (", position[X_AXIS]);
-      SERIAL_ECHOPAIR("->", target[X_AXIS]);
-      SERIAL_ECHOPAIR(") Y:", b);
-    #endif
-    SERIAL_ECHOPAIR(" (", position[Y_AXIS]);
-    SERIAL_ECHOPAIR("->", target[Y_AXIS]);
-    #if ENABLED(DELTA)
-      SERIAL_ECHOPAIR(") C:", c);
-    #else
-      SERIAL_ECHOPAIR(") Z:", c);
-    #endif
-    SERIAL_ECHOPAIR(" (", position[Z_AXIS]);
-    SERIAL_ECHOPAIR("->", target[Z_AXIS]);
-    SERIAL_ECHOPAIR(") E:", e);
-    SERIAL_ECHOPAIR(" (", position[E_AXIS]);
-    SERIAL_ECHOPAIR("->", target[E_AXIS]);
-    SERIAL_ECHOLNPGM(")");
-  //*/
-
-  // DRYRUN ignores all temperature constraints and assures that the extruder is instantly satisfied
-  if (DEBUGGING(DRYRUN))
-    position[E_AXIS] = target[E_AXIS];
-
-  // Always split the first move into two (if not homing or probing)
-  if (!blocks_queued()) {
-    #define _BETWEEN(A) (position[A##_AXIS] + target[A##_AXIS]) >> 1
-    const int32_t between[XYZE] = { _BETWEEN(X), _BETWEEN(Y), _BETWEEN(Z), _BETWEEN(E) };
-    DISABLE_STEPPER_DRIVER_INTERRUPT();
-    _buffer_steps(between, fr_mm_s, extruder);
     const uint8_t next = block_buffer_head;
     _buffer_steps(target, fr_mm_s, extruder);
     SBI(block_buffer[next].flag, BLOCK_BIT_CONTINUED);
@@ -1668,8 +1588,16 @@ void Planner::set_position_mm_kinematic(const float (&cart)[XYZE]) {
  * Sync from the stepper positions. (e.g., after an interrupted move)
  */
 void Planner::sync_from_steppers() {
-  LOOP_XYZE(i)
+  LOOP_XYZE(i) {
     position[i] = stepper.position((AxisEnum)i);
+    #if ENABLED(LIN_ADVANCE)
+      position_float[i] = position[i] * steps_to_mm[i
+        #if ENABLED(DISTINCT_E_FACTORS)
+          + (i == E_AXIS ? active_extruder : 0)
+        #endif
+      ];
+    #endif
+  }
 }
 
 /**
@@ -1683,6 +1611,9 @@ void Planner::set_position_mm(const AxisEnum axis, const float &v) {
     const uint8_t axis_index = axis;
   #endif
   position[axis] = LROUND(v * axis_steps_per_mm[axis_index]);
+  #if ENABLED(LIN_ADVANCE)
+    position_float[axis] = v;
+  #endif
   stepper.set_position(axis, v);
   previous_speed[axis] = 0.0;
 }
