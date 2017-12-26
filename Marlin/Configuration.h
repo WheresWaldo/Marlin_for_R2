@@ -361,9 +361,9 @@
   //#define  DEFAULT_Kd 66.90	 //[BH]
  
   // Robo R2 24V  [robo]
-  // #define  DEFAULT_Kp 23.56	//[BH]
-  // #define  DEFAULT_Ki 1.86	//[BH]
-  // #define  DEFAULT_Kd 74.68	//[BH]
+  #define  DEFAULT_Kp 23.56	//[BH]
+  #define  DEFAULT_Ki 1.86	//[BH]
+  #define  DEFAULT_Kd 74.68	//[BH]
 
   // Robo C2 19V  [robo]
   //#define  DEFAULT_Kp 23.75  //[robo]
