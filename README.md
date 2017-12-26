@@ -7,4 +7,4 @@ Settings will be optimized for what the actual R2 is capable of doing.
 
 Unified Bed Leveling (UBL) is the only leveling method enabled. As a result some of the Wizards found in RoboOS will not function and my make the UI non-responsive. As these are discovered they will be documented.
 
-I will maintain a version with MESH enabled on the Robo3D forums. It is a simple change to Configuration.h to disable UBL and enable MESH.
+I will maintain a version with UBL enabled on the Robo3D forums. It is a simple change to Configuration.h to disable UBL and enable MESH.
