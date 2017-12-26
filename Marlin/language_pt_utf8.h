@@ -25,7 +25,7 @@
  * UTF-8 for Graphical Display
  *
  * LCD Menu Messages
- * See also https://github.com/MarlinFirmware/Marlin/wiki/LCD-Language
+ * See also http://marlinfw.org/docs/development/lcd_language.html
  *
  */
 #ifndef LANGUAGE_PT_UTF_H
@@ -33,7 +33,7 @@
 
 #define DISPLAY_CHARSET_ISO10646_1
 
-#define WELCOME_MSG                         MACHINE_NAME _UxGT(" pronto.")
+#define WELCOME_MSG                         MACHINE_NAME _UxGT(" pronta.")
 #define MSG_SD_INSERTED                     _UxGT("Cartão inserido")
 #define MSG_SD_REMOVED                      _UxGT("Cartão removido")
 #define MSG_MAIN                            _UxGT("Menu principal")

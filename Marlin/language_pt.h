@@ -24,15 +24,16 @@
  * Portuguese
  *
  * LCD Menu Messages
- * See also https://github.com/MarlinFirmware/Marlin/wiki/LCD-Language
+ * See also http://marlinfw.org/docs/development/lcd_language.html
  *
  */
 #ifndef LANGUAGE_PT_H
 #define LANGUAGE_PT_H
 
 #define DISPLAY_CHARSET_ISO10646_1
+#define NOT_EXTENDED_ISO10646_1_5X7
 
-#define WELCOME_MSG                         MACHINE_NAME " pronto."
+#define WELCOME_MSG                         MACHINE_NAME " pronta."
 #define MSG_SD_INSERTED                     "Cartao inserido"
 #define MSG_SD_REMOVED                      "Cartao removido"
 #define MSG_MAIN                            "Menu principal"

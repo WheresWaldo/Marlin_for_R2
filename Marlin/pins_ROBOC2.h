@@ -18,6 +18,7 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+   C2 modifications by [BH]
 */
 
 #if !defined(__AVR_ATmega1280__) && !defined(__AVR_ATmega2560__)
@@ -29,11 +30,11 @@
 #endif
 
 #ifndef DEFAULT_MACHINE_NAME
-  #define DEFAULT_MACHINE_NAME "RoboC2"
+  #define DEFAULT_MACHINE_NAME "Robo C2"  //[BH]
 #endif
 
 #ifndef DEFAULT_SOURCE_CODE_URL
-  #define DEFAULT_SOURCE_CODE_URL "https://github.com/WheresWaldo/Marlin_for_R2 (dev)"
+  #define DEFAULT_SOURCE_CODE_URL "https://github.com/WheresWaldo/Marlin_for_R2"  //[BH]
 #endif
 
 #define IS_ROBOC2

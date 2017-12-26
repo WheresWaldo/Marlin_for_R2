@@ -18,6 +18,7 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+   R2 modifications by [BH]
 */
 
 #if !defined(__AVR_ATmega1280__) && !defined(__AVR_ATmega2560__)
@@ -29,11 +30,11 @@
 #endif
 
 #ifndef DEFAULT_MACHINE_NAME
-  #define DEFAULT_MACHINE_NAME "RoboMB"
+  #define DEFAULT_MACHINE_NAME "Robo R2"
 #endif
 
 #ifndef DEFAULT_SOURCE_CODE_URL
-  #define DEFAULT_SOURCE_CODE_URL "https://github.com/WheresWaldo/Marlin_for_R2 (dev)"
+  #define DEFAULT_SOURCE_CODE_URL "https://github.com/WheresWaldo/Marlin_for_R2"
 #endif
 
 #define IS_ROBOR2
@@ -117,19 +118,21 @@
 //
 // Misc. Functions
 //
-#define SDSS      53
-#define LED_PIN   13
+#define SDSS			53
+#define LED_PIN			 5  // [BH] robo default was 13
+#define CASE_LIGHT_PIN	44  // MUST BE HARDWARE PWM (2, 3, 4, 5, 6, 7, 8, 9, 10, 44, 45) 
+
 
 #ifndef FILWIDTH_PIN
-  #define FILWIDTH_PIN   -1  // ANALOG NUMBERING NOT USING IN C2
+  #define FILWIDTH_PIN  -1  // ANALOG NUMBERING NOT USING IN C2
 #endif
 
 // define digital pin 4 for the filament runout sensor. Use the RAMPS 1.4 digital input 4 on the servos connector
 #define FILRUNOUT_PIN    45
 
-#define CONTROLLER_FAN_PIN   5  // Pin used for the fan to cool controller
+#define CONTROLLER_FAN_PIN   6  // Pin used for the fan to cool controller (FAN1)
 #define FAN_PIN              7
-#define PS_ON_PIN            -1
+#define PS_ON_PIN           -1
 
 
 #define LCD_PINS_RS       16
