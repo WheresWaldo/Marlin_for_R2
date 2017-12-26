@@ -932,7 +932,7 @@ void Planner::_buffer_steps(const int32_t (&target)[XYZE], float fr_mm_s, const 
               enable_E2();
               g_uc_extruder_last_move[2] = (BLOCK_BUFFER_SIZE) * 2;
               DISABLE_IDLE_E(0);
-              DISABLE_IDLE_E(1);
+g               DISABLE_IDLE_E(1);
               #if EXTRUDERS > 3
                 DISABLE_IDLE_E(3);
                 #if EXTRUDERS > 4
@@ -1471,6 +1471,7 @@ void Planner::buffer_segment(const float &a, const float &b, const float &c, con
     if (lin_dist_e > 0)
       lin_dist_xy = HYPOT(a - position_float[X_AXIS], b - position_float[Y_AXIS]);
   #endif
+
 
   /* <-- add a slash to enable
     SERIAL_ECHOPAIR("  buffer_segment FR:", fr_mm_s);
