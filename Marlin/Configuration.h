@@ -286,7 +286,7 @@
  *
  * :{ '0': "Not used", '1':"100k / 4.7k - EPCOS", '2':"200k / 4.7k - ATC Semitec 204GT-2", '3':"Mendel-parts / 4.7k", '4':"10k !! do not use for a hotend. Bad resolution at high temp. !!", '5':"100K / 4.7k - ATC Semitec 104GT-2 (Used in ParCan & J-Head)", '6':"100k / 4.7k EPCOS - Not as accurate as Table 1", '7':"100k / 4.7k Honeywell 135-104LAG-J01", '8':"100k / 4.7k 0603 SMD Vishay NTCS0603E3104FXT", '9':"100k / 4.7k GE Sensing AL03006-58.2K-97-G1", '10':"100k / 4.7k RS 198-961", '11':"100k / 4.7k beta 3950 1%", '12':"100k / 4.7k 0603 SMD Vishay NTCS0603E3104FXT (calibrated for Makibox hot bed)", '13':"100k Hisens 3950  1% up to 300°C for hotend 'Simple ONE ' & hotend 'All In ONE'", '20':"PT100 (Ultimainboard V2.x)", '51':"100k / 1k - EPCOS", '52':"200k / 1k - ATC Semitec 204GT-2", '55':"100k / 1k - ATC Semitec 104GT-2 (Used in ParCan & J-Head)", '60':"100k Maker's Tool Works Kapton Bed Thermistor beta=3950", '66':"Dyze Design 4.7M High Temperature thermistor", '70':"the 100K thermistor found in the bq Hephestos 2", '71':"100k / 4.7k Honeywell 135-104LAF-J01", '147':"Pt100 / 4.7k", '1047':"Pt1000 / 4.7k", '110':"Pt100 / 1k (non-standard)", '1010':"Pt1000 / 1k (non standard)", '-3':"Thermocouple + MAX31855 (only for sensor 0)", '-2':"Thermocouple + MAX6675 (only for sensor 0)", '-1':"Thermocouple + AD595",'998':"Dummy 1", '999':"Dummy 2" }
  */
-#define TEMP_SENSOR_0 1    // [BH] E3Dv6 default is 5
+#define TEMP_SENSOR_0 1     // [BH] E3Dv6 default is 5
 #define TEMP_SENSOR_1 0
 #define TEMP_SENSOR_2 0
 #define TEMP_SENSOR_3 0
@@ -331,7 +331,7 @@
 #define HEATER_2_MAXTEMP 275
 #define HEATER_3_MAXTEMP 275
 #define HEATER_4_MAXTEMP 275
-#define BED_MAXTEMP 110  // [robo]
+#define BED_MAXTEMP 120  // [robo]
 
 //===========================================================================
 //============================= PID Settings ================================
@@ -531,7 +531,7 @@
  * Override with M203
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 300, 300, 5, 25 }
+#define DEFAULT_MAX_FEEDRATE          { 300, 300, 15, 25 }  // [robo]
 
 /**
  * Default Max Acceleration (change/s) change = mm/s
@@ -539,7 +539,7 @@
  * Override with M201
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 100, 1000 }  // [robo]
+#define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 200, 1000 }  // [BH]
 
 /**
  * Default Acceleration (change/s) change = mm/s
@@ -563,7 +563,7 @@
  */
 #define DEFAULT_XJERK  6.0  // [BH]
 #define DEFAULT_YJERK  6.0  // [BH]
-#define DEFAULT_ZJERK  0.3  
+#define DEFAULT_ZJERK  0.4  
 #define DEFAULT_EJERK  1.0  // [robo]
 
 //===========================================================================
@@ -715,7 +715,7 @@
 
 // For M851 give a range for adjusting the Z probe offset
 #define Z_PROBE_OFFSET_RANGE_MIN -20
-#define Z_PROBE_OFFSET_RANGE_MAX 20
+#define Z_PROBE_OFFSET_RANGE_MAX  20
 
 // Enable the M48 repeatability test to test probe accuracy
 #define Z_MIN_PROBE_REPEATABILITY_TEST  // [BH]
@@ -770,7 +770,7 @@
 // :[-1,1]
 #define X_HOME_DIR -1
 #define Y_HOME_DIR  1  // [robo]
-#define Z_HOME_DIR -1
+#define Z_HOME_DIR -1  // [BH] Home at the top, markedly faster.
 
 // @section machine
 
@@ -784,7 +784,7 @@
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE
 #define Y_MAX_POS Y_BED_SIZE
-#define Z_MAX_POS 255  // [BH]
+#define Z_MAX_POS 258  // [BH]
 
 /**
  * Software Endstops
@@ -933,7 +933,7 @@
     #define ABL_BILINEAR_SUBDIVISION  // [BH]
     #if ENABLED(ABL_BILINEAR_SUBDIVISION)
       // Number of subdivisions between probe points
-      #define BILINEAR_SUBDIVISIONS 4  // [BH]
+      #define BILINEAR_SUBDIVISIONS 3
     #endif
 
   #endif
@@ -1034,8 +1034,8 @@
 #endif
 
 // Homing speeds (mm/m)
-#define HOMING_FEEDRATE_XY (50*60)
-#define HOMING_FEEDRATE_Z  (4*60)
+#define HOMING_FEEDRATE_XY (55*60)  // [robo]
+#define HOMING_FEEDRATE_Z  (12*60)  // [robo]
 
 // @section calibrate
 
@@ -1141,7 +1141,7 @@
 
 // Preheat Constants
 #define PREHEAT_1_TEMP_HOTEND 195  // [BH]
-#define PREHEAT_1_TEMP_BED     50  // [BH]
+#define PREHEAT_1_TEMP_BED     40  // [BH]
 #define PREHEAT_1_FAN_SPEED   128  // Value from 0 to 255  [robo]
 
 #define PREHEAT_2_TEMP_HOTEND 230  // [BH]
