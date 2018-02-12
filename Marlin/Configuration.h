@@ -694,7 +694,7 @@
 // The number of probes to perform at each point.
 //   Set to 2 for a fast/slow probe, using the second probe result.
 //   Set to 3 or more for slow probes, averaging the results.
-#define MULTIPLE_PROBING 2  // [robo]
+#define MULTIPLE_PROBING 3  // [BH]
 
 /**
  * Z probes require clearance when deploying, stowing, and moving between
