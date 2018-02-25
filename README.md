@@ -11,4 +11,4 @@ I will maintain a version with UBL enabled on the Robo3D forums. It is a simple 
 
 # Known Issues
 
-roboLCD resets all EEPROM to factory defaults (do not use)
+roboLCD Z Offset Wizard resets all EEPROM to factory defaults (do not use)
