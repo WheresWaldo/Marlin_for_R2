@@ -150,3 +150,18 @@
 
 #define SD_DETECT_PIN     49
 #define KILL_PIN          41
+
+// I2C based DAC
+#define DAC_STEPPER_CURRENT
+
+// Channels available for DAC, For RoboMainboard 2.1.8 and up there are 4
+#define DAC_STEPPER_ORDER      {2,3,0,1}
+#define DAC_STEPPER_SENSE      0.1  // sense resistors on RoboMainboard stepper circuit are .1 value
+#define DAC_STEPPER_ADDRESS    0
+#define DAC_STEPPER_MAX     4096    // was 5000 but max allowable value is actually 4096
+#define DAC_STEPPER_VREF       1    // internal Vref, gain 2x = 4.096V
+#define DAC_STEPPER_GAIN       0    // value of 1 here sets gain of 2
+//#define DAC_DISABLE_PIN     69    // set low to enable DAC
+#define DAC_OR_ADDRESS      0x00
+
+#define INA19x_Input_pin      63    //Analog pin A9, current sensor for draw from Raspi

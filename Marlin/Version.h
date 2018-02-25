@@ -35,20 +35,20 @@
   /**
    * Marlin release version identifier
    */
-  #define SHORT_BUILD_VERSION "1.1.8"
+  #define SHORT_BUILD_VERSION "bugfix-1.1.x"
 
   /**
    * Verbose version identifier which should contain a reference to the location
    * from where the binary was downloaded or the source code was compiled.
    */
-  #define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION "-R2 UBL (Github)"  // [BH]
+  #define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION "-R2 UBL (Github)"
 
   /**
    * The STRING_DISTRIBUTION_DATE represents when the binary file was built,
    * here we define this default string as the date where the latest release
    * version was tagged.
    */
-  #define STRING_DISTRIBUTION_DATE "2017-12-25 12:00"
+  #define STRING_DISTRIBUTION_DATE "2018-02-25"
 
   /**
    * Required minimum Configuration.h and Configuration_adv.h file versions.
@@ -89,6 +89,6 @@
    * The WEBSITE_URL is the location where users can get more information such as
    * documentation about a specific Marlin release.
    */
-  #define WEBSITE_URL "http://marlinfw.org"
+  #define WEBSITE_URL "https://github.com/WheresWaldo/Marlin_for_R2"  // [BH]
 
 #endif // USE_AUTOMATIC_VERSIONING

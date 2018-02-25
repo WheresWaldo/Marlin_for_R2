@@ -91,10 +91,14 @@
 // example configuration folder.
 //
 //#define SHOW_CUSTOM_BOOTSCREEN
+
+// Enable to show the bitmap in Marlin/_Statusscreen.h on the status screen.
+//#define CUSTOM_STATUS_SCREEN_IMAGE
+
 // @section machine
 
 /**
- * Select which serial port on the board will be used for communication with the host.
+ * Select the serial port on the board to use for communication with the host.
  * This allows the connection of wireless adapters (for instance) to non-default port pins.
  * Serial port 0 is always used by the Arduino bootloader regardless of this setting.
  *
@@ -232,6 +236,15 @@
   // Enable this option to leave the PSU off at startup.
   // Power to steppers and heaters will need to be turned on with M80.
   //#define PS_DEFAULT_OFF
+
+  //#define AUTO_POWER_CONTROL        // Enable automatic control of the PS_ON pin
+  #if ENABLED(AUTO_POWER_CONTROL)
+    #define AUTO_POWER_FANS           // Turn on PSU if fans need power
+    #define AUTO_POWER_E_FANS
+    #define AUTO_POWER_CONTROLLERFAN
+    #define POWER_TIMEOUT 30
+  #endif
+
 #endif
 
 // @section temperature
@@ -253,7 +266,7 @@
  *     2 : 200k thermistor - ATC Semitec 204GT-2 (4.7k pullup)
  *     3 : Mendel-parts thermistor (4.7k pullup)
  *     4 : 10k thermistor !! do not use it for a hotend. It gives bad resolution at high temp. !!
- *     5 : 100K thermistor - ATC Semitec 104GT-2 (Used in ParCan & J-Head) (4.7k pullup)
+ *     5 : 100K thermistor - ATC Semitec 104GT-2/104NT-4-R025H42G (Used in ParCan & J-Head) (4.7k pullup)
  *     6 : 100k EPCOS - Not as accurate as table 1 (created using a fluke thermocouple) (4.7k pullup)
  *     7 : 100k Honeywell thermistor 135-104LAG-J01 (4.7k pullup)
  *    71 : 100k Honeywell thermistor 135-104LAF-J01 (4.7k pullup)
@@ -263,6 +276,7 @@
  *    11 : 100k beta 3950 1% thermistor (4.7k pullup)
  *    12 : 100k 0603 SMD Vishay NTCS0603E3104FXT (4.7k pullup) (calibrated for Makibox hot bed)
  *    13 : 100k Hisens 3950  1% up to 300°C for hotend "Simple ONE " & "Hotend "All In ONE"
+ *    15 : 100k thermistor calibration for JGAurora A5 hotend
  *    20 : the PT100 circuit found in the Ultimainboard V2.x
  *    60 : 100k Maker's Tool Works Kapton Bed Thermistor beta=3950
  *    66 : 4.7M High Temperature thermistor from Dyze Design
@@ -325,13 +339,12 @@
 // When temperature exceeds max temp, your heater will be switched off.
 // This feature exists to protect your hotend from overheating accidentally, but *NOT* from thermistor short/failure!
 // You should use MINTEMP for thermistor short/failure protection.
-
-#define HEATER_0_MAXTEMP 300  // [BH] Hexagon @ 300; E3Dv6 @ 320
+#define HEATER_0_MAXTEMP 325  // [BH] Hexagon @ 300; E3Dv6 @ 325
 #define HEATER_1_MAXTEMP 275
 #define HEATER_2_MAXTEMP 275
 #define HEATER_3_MAXTEMP 275
 #define HEATER_4_MAXTEMP 275
-#define BED_MAXTEMP 110  // [robo]
+#define BED_MAXTEMP 125  // [robo] (not sure it can actually get that hot)
 
 //===========================================================================
 //============================= PID Settings ================================
@@ -342,7 +355,7 @@
 #define PIDTEMP
 #define BANG_MAX 255     // Limits current to nozzle while in bang-bang mode; 255=full current
 #define PID_MAX BANG_MAX // Limits current to nozzle while PID is active (see PID_FUNCTIONAL_RANGE below); 255=full current
-#define PID_K1 0.95      // Smoothing factor within the PID
+#define PID_K1 0.95      // Smoothing factor within any PID loop
 #if ENABLED(PIDTEMP)
   //#define PID_AUTOTUNE_MENU // Add PID Autotune to the LCD "Temperature" menu to run M303 and apply the result.
   //#define PID_DEBUG // Sends debug data to the serial port.
@@ -356,18 +369,18 @@
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
   // Robo R2 24V - E3Dv6 [robo]
-  //#define  DEFAULT_Kp 16.58	 //[BH]
-  //#define  DEFAULT_Ki  1.03	 //[BH]
-  //#define  DEFAULT_Kd 66.90	 //[BH]
+  #define  DEFAULT_Kp 16.58	 //[BH]
+  #define  DEFAULT_Ki  1.03	 //[BH]
+  #define  DEFAULT_Kd 66.90	 //[BH]
  
   // Robo R2 24V  [robo]
-  #define  DEFAULT_Kp 23.56	//[BH]
-  #define  DEFAULT_Ki 1.86	//[BH]
-  #define  DEFAULT_Kd 74.68	//[BH]
+  //#define  DEFAULT_Kp 23.56	//[BH]
+  //#define  DEFAULT_Ki  1.86	//[BH]
+  //#define  DEFAULT_Kd 74.68	//[BH]
 
   // Robo C2 19V  [robo]
   //#define  DEFAULT_Kp 23.75  //[robo]
-  //#define  DEFAULT_Ki 1.48   //[robo]
+  //#define  DEFAULT_Ki  1.48  //[robo]
   //#define  DEFAULT_Kd 95.10  //[robo]
 
   // FIND YOUR OWN: "M303 E0 C8 S220" to run autotune on the hotend 0 at 220 degreesC for 8 cycles.
@@ -472,11 +485,10 @@
 #define USE_YMAX_PLUG  // [robo]
 #define USE_ZMAX_PLUG  // [robo]
 
-// coarse Endstop Settings
-#define ENDSTOPPULLUPS // Comment this out (using // at the start of the line) to disable the endstop pullup resistors
-
+// Enable pullup for all endstops to prevent a floating state
+#define ENDSTOPPULLUPS
 #if DISABLED(ENDSTOPPULLUPS)
-  // fine endstop settings: Individual pullups. will be ignored if ENDSTOPPULLUPS is defined
+  // Disable ENDSTOPPULLUPS to set pullups individually
   //#define ENDSTOPPULLUP_XMAX
   //#define ENDSTOPPULLUP_YMAX
   //#define ENDSTOPPULLUP_ZMAX
@@ -524,14 +536,14 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 800, 145.5 }  // [BH]
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 800, 145.5 }  // [BH]	435 Titan, 145.5 Robo
 
 /**
  * Default Max Feed Rate (mm/s)
  * Override with M203
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 300, 300, 5, 25 }
+#define DEFAULT_MAX_FEEDRATE          { 300, 300, 15, 25 }
 
 /**
  * Default Max Acceleration (change/s) change = mm/s
@@ -539,7 +551,7 @@
  * Override with M201
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 100, 1000 }  // [robo]
+#define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 200, 1000 }  // [robo]
 
 /**
  * Default Acceleration (change/s) change = mm/s
@@ -549,9 +561,9 @@
  *   M204 R    Retract Acceleration
  *   M204 T    Travel Acceleration
  */
-#define DEFAULT_ACCELERATION           500    // X, Y, Z and E acceleration for printing moves  [BH]
+#define DEFAULT_ACCELERATION          1000    // X, Y, Z and E acceleration for printing moves  [BH]
 #define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts  [robo]
-#define DEFAULT_TRAVEL_ACCELERATION   1000    // X, Y, Z acceleration for travel (non printing) moves [robo]
+#define DEFAULT_TRAVEL_ACCELERATION   2000    // X, Y, Z acceleration for travel (non printing) moves [robo]
 
 /**
  * Default Jerk (mm/s)
@@ -563,7 +575,7 @@
  */
 #define DEFAULT_XJERK  6.0  // [BH]
 #define DEFAULT_YJERK  6.0  // [BH]
-#define DEFAULT_ZJERK  0.3  
+#define DEFAULT_ZJERK  0.3
 #define DEFAULT_EJERK  1.0  // [robo]
 
 //===========================================================================
@@ -680,7 +692,7 @@
  */
 #define X_PROBE_OFFSET_FROM_EXTRUDER  5  // X offset: -left  +right  [of the nozzle] [BH]
 #define Y_PROBE_OFFSET_FROM_EXTRUDER 25  // Y offset: -front +behind [the nozzle] [BH]
-#define Z_PROBE_OFFSET_FROM_EXTRUDER  0  // Z offset: -below +above  [the nozzle]
+#define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
 
 // X and Y axis travel speed (mm/m) between probes
 #define XY_PROBE_SPEED 10000  // [BH]
@@ -694,7 +706,7 @@
 // The number of probes to perform at each point.
 //   Set to 2 for a fast/slow probe, using the second probe result.
 //   Set to 3 or more for slow probes, averaging the results.
-#define MULTIPLE_PROBING 2  // [robo]
+#define MULTIPLE_PROBING 3  // [BH]
 
 /**
  * Z probes require clearance when deploying, stowing, and moving between
@@ -770,7 +782,7 @@
 // :[-1,1]
 #define X_HOME_DIR -1
 #define Y_HOME_DIR  1  // [robo]
-#define Z_HOME_DIR -1
+#define Z_HOME_DIR -1  // [BH] Home at the top
 
 // @section machine
 
@@ -784,7 +796,7 @@
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE
 #define Y_MAX_POS Y_BED_SIZE
-#define Z_MAX_POS 255  // [BH]
+#define Z_MAX_POS 258  // [BH]
 
 /**
  * Software Endstops
@@ -795,7 +807,7 @@
  * - Use 'M211' to set software endstops on/off or report current state
  */
 
-// Min software endstops curtail movement below minimum coordinate bounds
+// Min software endstops constrain movement within minimum coordinate bounds
 //#define MIN_SOFTWARE_ENDSTOPS  // [BH]
 #if ENABLED(MIN_SOFTWARE_ENDSTOPS)
   #define MIN_SOFTWARE_ENDSTOP_X
@@ -803,7 +815,7 @@
   #define MIN_SOFTWARE_ENDSTOP_Z
 #endif
 
-// Max software endstops curtail movement above maximum coordinate bounds
+// Max software endstops constrain movement within maximum coordinate bounds
 #define MAX_SOFTWARE_ENDSTOPS
 #if ENABLED(MAX_SOFTWARE_ENDSTOPS)
   #define MAX_SOFTWARE_ENDSTOP_X
@@ -812,17 +824,18 @@
 #endif
 
 /**
- * Filament Runout Sensor
- * A mechanical or opto endstop is used to check for the presence of filament.
+ * Filament Runout Sensors
+ * Mechanical or opto endstops are used to check for the presence of filament.
  *
- * RAMPS-based boards use SERVO3_PIN.
- * For other boards you may need to define FIL_RUNOUT_PIN.
- * By default the firmware assumes HIGH = has filament, LOW = ran out
+ * RAMPS-based boards use SERVO3_PIN for the first runout sensor.
+ * For other boards you may need to define FIL_RUNOUT_PIN, FIL_RUNOUT2_PIN, etc.
+ * By default the firmware assumes HIGH=FILAMENT PRESENT.
  */
 //#define FILAMENT_RUNOUT_SENSOR
 #if ENABLED(FILAMENT_RUNOUT_SENSOR)
+  #define NUM_RUNOUT_SENSORS   1     // Number of sensors, up to one per extruder. Define a FIL_RUNOUT#_PIN for each.
   #define FIL_RUNOUT_INVERTING false // set to true to invert the logic of the sensor.
-  #define ENDSTOPPULLUP_FIL_RUNOUT // Uncomment to use internal pullup for filament runout pins if the sensor is defined.
+  #define FIL_RUNOUT_PULLUP          // Use internal pullup for filament runout pins.
   #define FILAMENT_RUNOUT_SCRIPT "M600"
 #endif
 
@@ -868,7 +881,13 @@
 //#define AUTO_BED_LEVELING_LINEAR
 //#define AUTO_BED_LEVELING_BILINEAR  // [BH]
 #define AUTO_BED_LEVELING_UBL  // [BH]
-//#define MESH_BED_LEVELING  // [BH]
+//#define MESH_BED_LEVELING	 // [BH]
+
+/**
+ * Normally G28 leaves leveling disabled on completion. Enable
+ * this option to have G28 restore the prior leveling state.
+ */
+#define RESTORE_LEVELING_AFTER_G28  // [BH]
 
 /**
  * Enable detailed logging of G28, G29, M48, etc.
@@ -894,10 +913,10 @@
    */
   #define G26_MESH_VALIDATION   // Enable G26 mesh validation
   #if ENABLED(G26_MESH_VALIDATION)
-    #define MESH_TEST_NOZZLE_SIZE     0.4   // (mm) Diameter of primary nozzle.
-    #define MESH_TEST_LAYER_HEIGHT    0.2   // (mm) Default layer height for the G26 Mesh Validation Tool.
-    #define MESH_TEST_HOTEND_TEMP   205.0   // (°C) Default nozzle temperature for the G26 Mesh Validation Tool.
-    #define MESH_TEST_BED_TEMP       60.0   // (°C) Default bed temperature for the G26 Mesh Validation Tool.
+    #define MESH_TEST_NOZZLE_SIZE    0.4  // (mm) Diameter of primary nozzle.
+    #define MESH_TEST_LAYER_HEIGHT   0.2  // (mm) Default layer height for the G26 Mesh Validation Tool.
+    #define MESH_TEST_HOTEND_TEMP  205.0  // (°C) Default nozzle temperature for the G26 Mesh Validation Tool.
+    #define MESH_TEST_BED_TEMP      60.0  // (°C) Default bed temperature for the G26 Mesh Validation Tool.
   #endif
 
 #endif
@@ -908,14 +927,14 @@
   #define GRID_MAX_POINTS_X 5
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
-  // Set the boundaries for probing (where the probe can reach).
-  #define LEFT_PROBE_BED_POSITION   10  // [robo]
-  #define RIGHT_PROBE_BED_POSITION 186  // [robo]
-  #define FRONT_PROBE_BED_POSITION  30  // [robo]
-  #define BACK_PROBE_BED_POSITION  186  // [robo]
-
   // The Z probe minimum outer margin (to validate G29 parameters).
   #define MIN_PROBE_EDGE 10
+
+  // Set the boundaries for probing (where the probe can reach).
+  #define LEFT_PROBE_BED_POSITION 10  // [BH]
+  #define RIGHT_PROBE_BED_POSITION (X_BED_SIZE - 11)  // [BH]
+  #define FRONT_PROBE_BED_POSITION 30  // [BH]
+  #define BACK_PROBE_BED_POSITION (Y_BED_SIZE - 11)	 // [BH]
 
   // Probe along the Y axis, advancing X after each column
   //#define PROBE_Y_FIRST
@@ -933,7 +952,7 @@
     #define ABL_BILINEAR_SUBDIVISION  // [BH]
     #if ENABLED(ABL_BILINEAR_SUBDIVISION)
       // Number of subdivisions between probe points
-      #define BILINEAR_SUBDIVISIONS 4  // [BH]
+      #define BILINEAR_SUBDIVISIONS 3
     #endif
 
   #endif
@@ -944,10 +963,10 @@
   // A simple cross-product is used to estimate the plane of the bed.
   #define ABL_PROBE_PT_1_X  10  // [robo]
   #define ABL_PROBE_PT_1_Y 100  // [robo]
-  #define ABL_PROBE_PT_2_X  15  
-  #define ABL_PROBE_PT_2_Y  20
+  #define ABL_PROBE_PT_2_X 15
+  #define ABL_PROBE_PT_2_Y 20
   #define ABL_PROBE_PT_3_X 100  // [robo]
-  #define ABL_PROBE_PT_3_Y  20
+  #define ABL_PROBE_PT_3_Y 20
 
 #elif ENABLED(AUTO_BED_LEVELING_UBL)
 
@@ -969,7 +988,10 @@
   #define UBL_PROBE_PT_3_Y  30  // [BH]
 
   #define UBL_MESH_EDIT_MOVES_Z     // Sophisticated users prefer no movement of nozzle
-  //#define UBL_SAVE_ACTIVE_ON_M500  // Save the currently active mesh in the current slot on M500  [BH] no LCD
+  //#define UBL_SAVE_ACTIVE_ON_M500   // Save the currently active mesh in the current slot on M500 [BH] no LCD
+
+  //#define UBL_Z_RAISE_WHEN_OFF_MESH 2.5 // When the nozzle is off the mesh, this value is used
+                                          // as the Z-Height correction value.
 
 #elif ENABLED(MESH_BED_LEVELING)
 
@@ -993,7 +1015,7 @@
 
 #if ENABLED(LCD_BED_LEVELING)
   #define MBL_Z_STEP        0.02  // Step size while manually probing Z axis.  [BH]
-  #define LCD_PROBE_Z_RANGE 4     // Z Range centered on Z_MIN_POS for LCD Z adjustment
+  #define LCD_PROBE_Z_RANGE 4 // Z Range centered on Z_MIN_POS for LCD Z adjustment
 #endif
 
 // Add a menu item to move between bed corners for manual bed adjustment
@@ -1034,8 +1056,8 @@
 #endif
 
 // Homing speeds (mm/m)
-#define HOMING_FEEDRATE_XY (50*60)
-#define HOMING_FEEDRATE_Z  (4*60)
+#define HOMING_FEEDRATE_XY (55*60)	//[robo]
+#define HOMING_FEEDRATE_Z  (12*60)	//[robo]
 
 // @section calibrate
 
@@ -1146,7 +1168,7 @@
 
 #define PREHEAT_2_TEMP_HOTEND 230  // [BH]
 #define PREHEAT_2_TEMP_BED     80  // [BH]
-#define PREHEAT_2_FAN_SPEED     0  // Value from 0 to 255
+#define PREHEAT_2_FAN_SPEED     0 // Value from 0 to 255
 
 /**
  * Nozzle Park
@@ -1272,11 +1294,11 @@
  *
  * Select the language to display on the LCD. These languages are available:
  *
- *    en, an, bg, ca, cn, cz, cz_utf8, de, el, el-gr, es, eu, fi, fr, fr_utf8, gl,
- *    hr, it, kana, kana_utf8, nl, pl, pt, pt_utf8, pt-br, pt-br_utf8, ru, sk_utf8,
+ *    en, an, bg, ca, cn, cz, cz_utf8, de, el, el-gr, es, es_utf8, eu, fi, fr, fr_utf8,
+ *    gl, hr, it, kana, kana_utf8, nl, pl, pt, pt_utf8, pt-br, pt-br_utf8, ru, sk_utf8,
  *    tr, uk, zh_CN, zh_TW, test
  *
- * :{ 'en':'English', 'an':'Aragonese', 'bg':'Bulgarian', 'ca':'Catalan', 'cn':'Chinese', 'cz':'Czech', 'cz_utf8':'Czech (UTF8)', 'de':'German', 'el':'Greek', 'el-gr':'Greek (Greece)', 'es':'Spanish', 'eu':'Basque-Euskera', 'fi':'Finnish', 'fr':'French', 'fr_utf8':'French (UTF8)', 'gl':'Galician', 'hr':'Croatian', 'it':'Italian', 'kana':'Japanese', 'kana_utf8':'Japanese (UTF8)', 'nl':'Dutch', 'pl':'Polish', 'pt':'Portuguese', 'pt-br':'Portuguese (Brazilian)', 'pt-br_utf8':'Portuguese (Brazilian UTF8)', 'pt_utf8':'Portuguese (UTF8)', 'ru':'Russian', 'sk_utf8':'Slovak (UTF8)', 'tr':'Turkish', 'uk':'Ukrainian', 'zh_CN':'Chinese (Simplified)', 'zh_TW':'Chinese (Taiwan)', test':'TEST' }
+ * :{ 'en':'English', 'an':'Aragonese', 'bg':'Bulgarian', 'ca':'Catalan', 'cn':'Chinese', 'cz':'Czech', 'cz_utf8':'Czech (UTF8)', 'de':'German', 'el':'Greek', 'el-gr':'Greek (Greece)', 'es':'Spanish', 'es_utf8':'Spanish (UTF8)', 'eu':'Basque-Euskera', 'fi':'Finnish', 'fr':'French', 'fr_utf8':'French (UTF8)', 'gl':'Galician', 'hr':'Croatian', 'it':'Italian', 'kana':'Japanese', 'kana_utf8':'Japanese (UTF8)', 'nl':'Dutch', 'pl':'Polish', 'pt':'Portuguese', 'pt-br':'Portuguese (Brazilian)', 'pt-br_utf8':'Portuguese (Brazilian UTF8)', 'pt_utf8':'Portuguese (UTF8)', 'ru':'Russian', 'sk_utf8':'Slovak (UTF8)', 'tr':'Turkish', 'uk':'Ukrainian', 'zh_CN':'Chinese (Simplified)', 'zh_TW':'Chinese (Taiwan)', test':'TEST' }
  */
 #define LCD_LANGUAGE en
 
@@ -1349,13 +1371,13 @@
 // This option overrides the default number of encoder pulses needed to
 // produce one step. Should be increased for high-resolution encoders.
 //
-//#define ENCODER_PULSES_PER_STEP 1
+//#define ENCODER_PULSES_PER_STEP 4
 
 //
 // Use this option to override the number of step signals required to
 // move between next/prev menu items.
 //
-//#define ENCODER_STEPS_PER_MENU_ITEM 5
+//#define ENCODER_STEPS_PER_MENU_ITEM 1
 
 /**
  * Encoder Direction Options
@@ -1404,8 +1426,8 @@
 // Note: Test audio output with the G-Code:
 //  M300 S<frequency Hz> P<duration ms>
 //
-//#define LCD_FEEDBACK_FREQUENCY_DURATION_MS 100
-//#define LCD_FEEDBACK_FREQUENCY_HZ 1000
+//#define LCD_FEEDBACK_FREQUENCY_DURATION_MS 2
+//#define LCD_FEEDBACK_FREQUENCY_HZ 5000
 
 //
 // CONTROLLER TYPE: Standard
@@ -1530,6 +1552,12 @@
 //#define LCD_FOR_MELZI
 
 //
+// LCD for Malyan M200 printers.
+// This requires SDSUPPORT to be enabled
+//
+//#define MALYAN_LCD
+
+//
 // CONTROLLER TYPE: I2C
 //
 // Note: These controllers require the installation of Arduino's LiquidCrystal_I2C
@@ -1543,12 +1571,13 @@
 //#define RA_CONTROL_PANEL
 
 //
-// Sainsmart YW Robot (LCM1602) LCD Display
+// Sainsmart (YwRobot) LCD Displays
 //
-// Note: This controller requires F.Malpartida's LiquidCrystal_I2C library
+// These require F.Malpartida's LiquidCrystal_I2C library
 // https://bitbucket.org/fmalpartida/new-liquidcrystal/wiki/Home
 //
-//#define LCD_I2C_SAINSMART_YWROBOT
+//#define LCD_SAINSMART_I2C_1602
+//#define LCD_SAINSMART_I2C_2004
 
 //
 // Generic LCM1602 LCD adapter
@@ -1588,6 +1617,12 @@
 #endif
 
 //
+// Original Ulticontroller from Ultimaker 2 printer with SSD1309 I2C display and encoder
+// https://github.com/Ultimaker/Ultimaker2/tree/master/1249_Ulticontroller_Board_(x1)
+//
+//#define ULTI_CONTROLLER
+
+//
 // CONTROLLER TYPE: Shift register panels
 //
 // 2 wire Non-latching LCD SR from https://goo.gl/aJJ4sH
@@ -1622,20 +1657,15 @@
 //#define CR10_STOCKDISPLAY
 
 //
-// MKS OLED 1.3" 128x64 FULL GRAPHICS CONTROLLER
+// MKS OLED 1.3" 128 × 64 FULL GRAPHICS CONTROLLER
 // http://reprap.org/wiki/MKS_12864OLED
 //
 // Tiny, but very sharp OLED display
-// If there is a pixel shift, try the other controller.
 //
 //#define MKS_12864OLED          // Uses the SH1106 controller (default)
 //#define MKS_12864OLED_SSD1306  // Uses the SSD1306 controller
 
-// Silvergate GLCD controller
-// http://github.com/android444/Silvergate
 //
-//#define SILVER_GATE_GLCD_CONTROLLER
-
 // Silvergate GLCD controller
 // http://github.com/android444/Silvergate
 //
