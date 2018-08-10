@@ -104,9 +104,6 @@
 #define BOARD_SCOOVO_X9H        321   // abee Scoovo X9H
 #define BOARD_GT2560_REV_A      74    // Geeetech GT2560 Rev. A
 #define BOARD_GT2560_REV_A_PLUS 75    // Geeetech GT2560 Rev. A+ (with auto level probe)
-#define BOARD_ROBOMB            991   // Robo R2 single extruder  [robo]
-#define BOARD_VERSION_C2        992   // Robo C2  [robo]
-#define BOARD_VERSION_R2_DUAL   993   // Robo R2 with a Dual Extrusion Kit  [robo]
 
 //
 // ATmega1281, ATmega2561
@@ -159,6 +156,15 @@
 #define BOARD_TEENSY2           84    // Teensy++2.0 (AT90USB1286) - CLI compile: HARDWARE_MOTHERBOARD=84  make
 #define BOARD_5DPRINT           88    // 5DPrint D8 Driver Board
 
-#define MB(board) (defined(BOARD_##board) && MOTHERBOARD==BOARD_##board)
+#define MB(board) (MOTHERBOARD==BOARD_##board)
+
+//Robo Versioned Boards
+#define BOARD_VERSION_R2 1 //Robo R2
+#define BOARD_VERSION_C2 2 //Robo C2
+#define BOARD_VERSION_R2_DUAL 3//Robo R2 with a Dual Extrusion Kit
+#define BOARD_VERSION_R2_E3DV6 4 //Robo R2 with E3D V6 hotend
+
+#define MB(board) (MOTHERBOARD==BOARD_##board)
+#define RBV(board_version) (ROBO_BOARD_VERSION==BOARD_VERSION_##board_version)
 
 #endif // __BOARDS_H

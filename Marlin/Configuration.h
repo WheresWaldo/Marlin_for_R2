@@ -124,12 +124,37 @@
 // The following define selects which electronics board you have.
 // Please choose the name from boards.h that matches your setup
 #ifndef MOTHERBOARD
-  #define MOTHERBOARD BOARD_ROBOMB  //[robo]
+  #define MOTHERBOARD BOARD_ROBOMB	//[robo]
+#endif
+
+/*
+ * Options are R2, C2, or R2_DUAL
+ */
+#ifndef ROBO_BOARD_VERSION
+  #define ROBO_BOARD_VERSION BOARD_VERSION_R2
+#endif
+
+#ifndef ROBO_PRINTER
+  #define ROBO_PRINTER
 #endif
 
 // Optional custom name for your RepStrap or other custom machine
 // Displayed in the LCD "Ready" message
-#define CUSTOM_MACHINE_NAME "Robo3D R2"  //[BH]
+// This block will also alter the DETAILED_BUILD_VERSION to display what board this is compiled for. (M115 will show this.)	 //[robo]
+#if RBV(C2)
+  #define CUSTOM_MACHINE_NAME " Robo C2"
+  #define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION CUSTOM_MACHINE_NAME
+#endif
+#if RBV(R2_ED3V6)
+#define CUSTOM_MACHINE_NAME " Robo R2 with E3D V6"
+#define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION CUSTOM_MACHINE_NAME
+#else
+  #define CUSTOM_MACHINE_NAME " Robo R2"
+  #define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION CUSTOM_MACHINE_NAME
+#endif
+
+//If the robo is using a INA193 for sensing current draw from Raspi, enable this variable
+#define INA19X
 
 // Define this to set a unique identifier for this printer, (Used by some programs to differentiate between machines)
 // You can use an online service to generate a random UUID. (eg http://www.uuidgenerator.net/version4)
@@ -139,10 +164,17 @@
 
 // This defines the number of extruders
 // :[1, 2, 3, 4, 5]
+
+#if RBV(R2_DUAL)  //[robo]
+  #define EXTRUDERS 2
+#endif
+
+#if RBV(R2) || RBV(C2) || RBV(R2_E3DV6)
 #define EXTRUDERS 1
+#endif
 
 // Generally expected filament diameter (1.75, 2.85, 3.0, ...). Used for Volumetric, Filament Width Sensor, etc.
-#define DEFAULT_NOMINAL_FILAMENT_DIA 1.75  //[BH]
+#define DEFAULT_NOMINAL_FILAMENT_DIA 1.75  //[robo]
 
 // For Cyclops or any "multi-extruder" that shares a single nozzle.
 //#define SINGLENOZZLE
@@ -217,8 +249,13 @@
 // Offset of the extruders (uncomment if using more than one and relying on firmware to position when changing).
 // The offset has to be X=0, Y=0 for the extruder 0 hotend (default extruder).
 // For the other hotends it is their distance from the extruder 0 hotend.
+#if RBV(C2) || RBV(R2) || RBV(R2_E3DV6) //[robo]
 //#define HOTEND_OFFSET_X {0.0, 20.00} // (in mm) for each extruder, offset of the hotend on the X axis
 //#define HOTEND_OFFSET_Y {0.0, 5.00}  // (in mm) for each extruder, offset of the hotend on the Y axis
+#elif RBV(R2_DUAL)
+  #define HOTEND_OFFSET_X {0.0, 20.00} // (in mm) for each extruder, offset of the hotend on the X axis
+  #define HOTEND_OFFSET_Y {0.0, 0.00}  // (in mm) for each extruder, offset of the hotend on the Y axis
+#endif
 
 // @section machine
 
@@ -303,13 +340,43 @@
  *
  * :{ '0': "Not used", '1':"100k / 4.7k - EPCOS", '2':"200k / 4.7k - ATC Semitec 204GT-2", '3':"Mendel-parts / 4.7k", '4':"10k !! do not use for a hotend. Bad resolution at high temp. !!", '5':"100K / 4.7k - ATC Semitec 104GT-2 (Used in ParCan & J-Head)", '501':"100K Zonestar (Tronxy X3A)", '6':"100k / 4.7k EPCOS - Not as accurate as Table 1", '7':"100k / 4.7k Honeywell 135-104LAG-J01", '8':"100k / 4.7k 0603 SMD Vishay NTCS0603E3104FXT", '9':"100k / 4.7k GE Sensing AL03006-58.2K-97-G1", '10':"100k / 4.7k RS 198-961", '11':"100k / 4.7k beta 3950 1%", '12':"100k / 4.7k 0603 SMD Vishay NTCS0603E3104FXT (calibrated for Makibox hot bed)", '13':"100k Hisens 3950  1% up to 300°C for hotend 'Simple ONE ' & hotend 'All In ONE'", '20':"PT100 (Ultimainboard V2.x)", '51':"100k / 1k - EPCOS", '52':"200k / 1k - ATC Semitec 204GT-2", '55':"100k / 1k - ATC Semitec 104GT-2 (Used in ParCan & J-Head)", '60':"100k Maker's Tool Works Kapton Bed Thermistor beta=3950", '66':"Dyze Design 4.7M High Temperature thermistor", '70':"the 100K thermistor found in the bq Hephestos 2", '71':"100k / 4.7k Honeywell 135-104LAF-J01", '147':"Pt100 / 4.7k", '1047':"Pt1000 / 4.7k", '110':"Pt100 / 1k (non-standard)", '1010':"Pt1000 / 1k (non standard)", '-4':"Thermocouple + AD8495", '-3':"Thermocouple + MAX31855 (only for sensor 0)", '-2':"Thermocouple + MAX6675 (only for sensor 0)", '-1':"Thermocouple + AD595",'998':"Dummy 1", '999':"Dummy 2" }
  */
-#define TEMP_SENSOR_0 5  // Use '1' for Robo, '5' for E3Dv6  [BH] 
-#define TEMP_SENSOR_1 0
-#define TEMP_SENSOR_2 0
-#define TEMP_SENSOR_3 0
-#define TEMP_SENSOR_4 0
-#define TEMP_SENSOR_BED 12  //[robo]
-#define TEMP_SENSOR_CHAMBER 0
+
+#if RBV(R2_DUAL)
+  #define TEMP_SENSOR_0 1	// Hexagon = 1, E3Dv6 = 5
+  #define TEMP_SENSOR_1 1
+  #define TEMP_SENSOR_2 0
+  #define TEMP_SENSOR_3 0
+  #define TEMP_SENSOR_4 0
+  #define TEMP_SENSOR_BED 12  //[robo]
+  #define TEMP_SENSOR_CHAMBER 0
+#endif
+
+#if RBV(R2)
+  #define TEMP_SENSOR_0 1
+  #define TEMP_SENSOR_1 0
+  #define TEMP_SENSOR_2 0
+  #define TEMP_SENSOR_3 0
+  #define TEMP_SENSOR_4 0
+  #define TEMP_SENSOR_BED 12
+#endif
+
+#if RBV(R2_E3DV6)
+  #define TEMP_SENSOR_0 5
+  #define TEMP_SENSOR_1 0
+  #define TEMP_SENSOR_2 0
+  #define TEMP_SENSOR_3 0
+  #define TEMP_SENSOR_4 0
+  #define TEMP_SENSOR_BED 12
+#endif
+
+#if RBV(C2)
+  #define TEMP_SENSOR_0 1
+  #define TEMP_SENSOR_1 0
+  #define TEMP_SENSOR_2 0
+  #define TEMP_SENSOR_3 0
+  #define TEMP_SENSOR_4 0
+  #define TEMP_SENSOR_BED 0
+#endif
 
 // Dummy thermistor constant temperature readings, for use with 998 and 999
 #define DUMMY_THERMISTOR_998_VALUE 25
@@ -348,7 +415,7 @@
 #define HEATER_2_MAXTEMP 275
 #define HEATER_3_MAXTEMP 275
 #define HEATER_4_MAXTEMP 275
-#define BED_MAXTEMP 125  //[BH]
+#define BED_MAXTEMP 110  //[robo]
 
 //===========================================================================
 //============================= PID Settings ================================
@@ -373,14 +440,18 @@
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
   // Robo R2 24V - E3Dv6 [robo]
-    #define  DEFAULT_Kp 16.58	 //[BH]	23.8 Hexagon
-    #define  DEFAULT_Ki  1.03	 //[BH]	 1.7 Hexagon
-    #define  DEFAULT_Kd 66.90	 //[BH]	85.0 Hexagon
-
+  #if RBV(R2) || RBV(R2_DUAL) || RBV(R2_E3DV6)
+    #define  DEFAULT_Kp 16.58	 //[BH]	23.8 Hexagon  [robo]
+    #define  DEFAULT_Ki  1.03	 //[BH]	 1.7 Hexagon  [robo]
+    #define  DEFAULT_Kd 66.90	 //[BH]	85.0 Hexagon  [robo]
+  #endif
+  
   // Robo C2 19V  [robo]
-  //#define  DEFAULT_Kp 23.75  //[robo]
-  //#define  DEFAULT_Ki 1.48   //[robo]
-  //#define  DEFAULT_Kd 95.10  //[robo]
+  #if RBV(C2)
+    #define  DEFAULT_Kp 23.75  //[robo]
+    #define  DEFAULT_Ki 1.48   //[robo]
+    #define  DEFAULT_Kd 95.10  //[robo]
+  #endif
 
 #endif // PIDTEMP
 
@@ -422,18 +493,6 @@
   #define  DEFAULT_bedKi  54.75	 //[BH]	 21.29 [robo]
   #define  DEFAULT_bedKd 376.28	 //[BH]	135.50 [robo]
 
-  //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
-  //from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
-  //#define DEFAULT_bedKp 10.00
-  //#define DEFAULT_bedKi .023
-  //#define DEFAULT_bedKd 305.4
-
-  //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
-  //from pidautotune
-  //#define DEFAULT_bedKp 97.1
-  //#define DEFAULT_bedKi 1.41
-  //#define DEFAULT_bedKd 1675.16
-
   // FIND YOUR OWN: "M303 E-1 C8 S90" to run autotune on the bed at 90 degreesC for 8 cycles.
 #endif // PIDTEMPBED
 
@@ -454,7 +513,7 @@
  * Note: For Bowden Extruders make this large enough to allow load/unload.
  */
 #define PREVENT_LENGTHY_EXTRUDE
-#define EXTRUDE_MAXLENGTH 300  //[BH]
+#define EXTRUDE_MAXLENGTH 700  //[robo]
 
 //===========================================================================
 //======================== Thermal Runaway Protection =======================
@@ -473,8 +532,14 @@
  * details can be tuned in Configuration_adv.h
  */
 
-#define THERMAL_PROTECTION_HOTENDS // Enable thermal protection for all extruders
-#define THERMAL_PROTECTION_BED     // Enable thermal protection for the heated bed
+#if RBV(R2) || RBV(R2_DUAL) || RBV(R2_E3DV6)
+  #define THERMAL_PROTECTION_HOTENDS // Enable thermal protection for all extruders
+  #define THERMAL_PROTECTION_BED     // Enable thermal protection for the heated bed
+#endif
+
+#if RBV(C2)
+  #define THERMAL_PROTECTION_HOTENDS // Enable thermal protection for all extruders
+#endif
 
 //===========================================================================
 //============================= Mechanical Settings =========================
@@ -597,23 +662,39 @@
  * Default Axis Steps Per Unit (steps/mm)
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
- */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 800, 145.5 }  // Robo @ 145.5, Titan @ 435 [BH]
 
-/**
  * Default Max Feed Rate (mm/s)
  * Override with M203
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
- */
-#define DEFAULT_MAX_FEEDRATE          { 300, 300, 5, 25 }
 
-/**
  * Default Max Acceleration (change/s) change = mm/s
  * (Maximum start speed for accelerated moves)
  * Override with M201
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 200, 10000 }  //[robo]
+#ifdef EXTRUDERS
+  #if RBV(R2) || RBV(R2_DUAL) || RBV(R2_E3DV6)
+    #if EXTRUDERS == 1
+      //Single
+      #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 800.00, 145.5 }  // Robo @ 145.5, Titan @ 435  [BH]
+      #define DEFAULT_MAX_FEEDRATE          { 300, 300, 15, 25 }
+      #define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 1000 }
+    #endif
+    #if EXTRUDERS == 2
+      //Dual extruder using BondTech BMG
+      #define DISTINCT_E_FACTORS
+      #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 800.00, 145.5, 425.0 }
+      #define DEFAULT_MAX_FEEDRATE          { 300, 300, 15, 25, 100 }
+      #define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 1000, 1000 }
+    #endif
+  #endif
+
+  #if RBV(C2)
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 800.00, 145.5 }
+    #define DEFAULT_MAX_FEEDRATE          { 300, 300, 12, 25 }
+    #define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 1000 }
+  #endif
+#endif
 
 /**
  * Default Acceleration (change/s) change = mm/s
@@ -637,7 +718,7 @@
  */
 #define DEFAULT_XJERK                  6.0  //[BH]
 #define DEFAULT_YJERK                  6.0  //[BH]
-#define DEFAULT_ZJERK                  0.3
+#define DEFAULT_ZJERK                  0.4	//[robo]
 #define DEFAULT_EJERK                  1.0  //[robo]
 
 /**
@@ -771,10 +852,10 @@
 #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
 
 // Certain types of probes need to stay away from edges
-#define MIN_PROBE_EDGE 10  //[BH]
+#define MIN_PROBE_EDGE 10  //[robo]
 
 // X and Y axis travel speed (mm/m) between probes
-#define XY_PROBE_SPEED 10000  //[BH]
+#define XY_PROBE_SPEED 10000  //[robo]
 
 // Feedrate (mm/m) for the first approach when double-probing (MULTIPLE_PROBING == 2)
 #define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
@@ -839,7 +920,7 @@
 
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
 #define INVERT_X_DIR false
-#define INVERT_Y_DIR false  //[BH]
+#define INVERT_Y_DIR false  //[robo]
 #define INVERT_Z_DIR false
 
 // @section extruder
@@ -869,16 +950,42 @@
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 197  //[robo]
-#define Y_BED_SIZE 197  //[robo]
+// Robo R2
+#if RBV(R2) || RBV(R2_E3DV6) || RBV(R2_DUAL)
+  #define X_BED_SIZE 197
+  #define Y_BED_SIZE 197
+//Robo C2
+#elif RBV(C2)
+  #define X_BED_SIZE 127
+  #define Y_BED_SIZE 127
+#endif
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
-#define X_MIN_POS 0
-#define Y_MIN_POS 0
-#define Z_MIN_POS 0
-#define X_MAX_POS X_BED_SIZE
-#define Y_MAX_POS Y_BED_SIZE
-#define Z_MAX_POS 258  //[BH]
+// Robo R2
+#if RBV(R2) || RBV(R2_E3DV6)
+  #define X_MIN_POS 0
+  #define Y_MIN_POS 0
+  #define Z_MIN_POS 0
+  #define X_MAX_POS X_BED_SIZE
+  #define Y_MAX_POS Y_BED_SIZE
+  #define Z_MAX_POS 258  //[BH]
+// Robo R2 Dual
+#elif RBV(R2_DUAL)
+  #define X_MIN_POS 0
+  #define Y_MIN_POS 0
+  #define Z_MIN_POS 0
+  #define X_MAX_POS X_BED_SIZE
+  #define Y_MAX_POS Y_BED_SIZE
+  #define Z_MAX_POS 260
+// Robo C2
+  #define X_MIN_POS 0
+  #define Y_MIN_POS 0
+  #define Z_MIN_POS 0
+  #define X_MAX_POS X_BED_SIZE
+  #define Y_MAX_POS Y_BED_SIZE
+  #define Z_MAX_POS 160
+#endif
+
 
 /**
  * Software Endstops
@@ -986,7 +1093,7 @@
   // Gradually reduce leveling correction until a set height is reached,
   // at which point movement will be level to the machine's XY plane.
   // The height can be set with M420 Z<height>
-  #define ENABLE_LEVELING_FADE_HEIGHT
+  //#define ENABLE_LEVELING_FADE_HEIGHT  //[robo]
 
   // For Cartesian machines, instead of dividing moves on mesh boundaries,
   // split up moves into short segments like a Delta. This follows the
@@ -1010,14 +1117,34 @@
 #if ENABLED(AUTO_BED_LEVELING_LINEAR) || ENABLED(AUTO_BED_LEVELING_BILINEAR)
 
   // Set the number of grid points per dimension.
-  #define GRID_MAX_POINTS_X 5  //[BH]
-  #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
+  #if RBV(R2) || RBV(R2_E3DV6)
+    #define GRID_MAX_POINTS_X 5  //[BH]
+    #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
-  // Set the boundaries for probing (where the probe can reach).
-  #define LEFT_PROBE_BED_POSITION MIN_PROBE_EDGE  //[BH]
-  #define RIGHT_PROBE_BED_POSITION (X_BED_SIZE - MIN_PROBE_EDGE)  //[BH]
-  #define FRONT_PROBE_BED_POSITION MIN_PROBE_EDGE  //[BH]
-  #define BACK_PROBE_BED_POSITION (Y_BED_SIZE - MIN_PROBE_EDGE)  //[BH]
+    // Set the boundaries for probing (where the probe can reach).
+    #define LEFT_PROBE_BED_POSITION MIN_PROBE_EDGE  //[BH]
+    #define RIGHT_PROBE_BED_POSITION (X_BED_SIZE - MIN_PROBE_EDGE)  //[BH]
+    #define FRONT_PROBE_BED_POSITION MIN_PROBE_EDGE  //[BH]
+    #define BACK_PROBE_BED_POSITION (Y_BED_SIZE - MIN_PROBE_EDGE)  //[BH]
+  #elif RBV(R2_DUAL)
+    #define GRID_MAX_POINTS_X 3
+    #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
+
+    #define LEFT_PROBE_BED_POSITION 10
+    #define RIGHT_PROBE_BED_POSITION 186
+    #define FRONT_PROBE_BED_POSITION 30
+    #define BACK_PROBE_BED_POSITION 186
+
+  #elif RBV(C2)
+    #define GRID_MAX_POINTS_X 3
+    #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
+
+    #define LEFT_PROBE_BED_POSITION 10
+    #define RIGHT_PROBE_BED_POSITION 115
+    #define FRONT_PROBE_BED_POSITION 30
+    #define BACK_PROBE_BED_POSITION 115
+  #endif
+
 
   // Probe along the Y axis, advancing X after each column
   //#define PROBE_Y_FIRST
@@ -1026,13 +1153,13 @@
 
     // Beyond the probed grid, continue the implied tilt?
     // Default is to maintain the height of the nearest edge.
-    //#define EXTRAPOLATE_BEYOND_GRID
+    #define EXTRAPOLATE_BEYOND_GRID  //[robo]
 
     //
     // Experimental Subdivision of the grid by Catmull-Rom method.
     // Synthesizes intermediate points to produce a more detailed mesh.
     //
-    #define ABL_BILINEAR_SUBDIVISION  //[BH]
+    #define ABL_BILINEAR_SUBDIVISION  //[robo]
     #if ENABLED(ABL_BILINEAR_SUBDIVISION)
       // Number of subdivisions between probe points
       #define BILINEAR_SUBDIVISIONS 3
@@ -1176,9 +1303,9 @@
 
 #if ENABLED(SKEW_CORRECTION)
   // Input all length measurements here:
-  #define XY_DIAG_AC 282.8427124746
-  #define XY_DIAG_BD 282.8427124746
-  #define XY_SIDE_AD 200
+  #define XY_DIAG_AC 278.6001  //[robo]
+  #define XY_DIAG_BD 278.6001  //[robo]
+  #define XY_SIDE_AD 197	   //[robo]
 
   // Or, set the default skew factors directly here
   // to override the above measurements:
@@ -1186,11 +1313,11 @@
 
   //#define SKEW_CORRECTION_FOR_Z
   #if ENABLED(SKEW_CORRECTION_FOR_Z)
-    #define XZ_DIAG_AC 282.8427124746
-    #define XZ_DIAG_BD 282.8427124746
-    #define YZ_DIAG_AC 282.8427124746
-    #define YZ_DIAG_BD 282.8427124746
-    #define YZ_SIDE_AD 200
+    #define XZ_DIAG_AC 278.6001	 //[robo]
+    #define XZ_DIAG_BD 278.6001	 //[robo]
+    #define YZ_DIAG_AC 278.6001	 //[robo]
+    #define YZ_DIAG_BD 278.6001	 //[robo]
+    #define YZ_SIDE_AD 197		 //[robo]
     #define XZ_SKEW_FACTOR 0.0
     #define YZ_SKEW_FACTOR 0.0
   #endif
@@ -1246,11 +1373,11 @@
 
 // Preheat Constants
 #define PREHEAT_1_TEMP_HOTEND 180
-#define PREHEAT_1_TEMP_BED     50  //[BH]
-#define PREHEAT_1_FAN_SPEED   128  // Value from 0 to 255  [BH]
+#define PREHEAT_1_TEMP_BED     50  //[robo]
+#define PREHEAT_1_FAN_SPEED   128  // Value from 0 to 255  [robo]
 
 #define PREHEAT_2_TEMP_HOTEND 240
-#define PREHEAT_2_TEMP_BED     80  //[BH]
+#define PREHEAT_2_TEMP_BED     80  //[robo]
 #define PREHEAT_2_FAN_SPEED     0  // Value from 0 to 255
 
 /**
